@@ -1,6 +1,6 @@
 # PMI Data Collection & Knowledge Extraction
 
-Phase 1 and Phase 2 of the PMI (Project Memory Intelligence) pipeline.
+Phase 1 - 3 of the PMI (Project Memory Intelligence) pipeline.
 
 ## What this does
 
@@ -41,13 +41,29 @@ python -m src.build_knowledge_base
 ```
 Output: `data/processed/knowledge_base.json`
 
+
+**Step 3 — Embedding Generation (Phase 3):**
+Reads the processed knowledge base and converts each knowledge document
+into a vector embedding using Sentence Transformers.
+
+```
+python -m src.Embeddings.main
+```
+
+Output: `data/processed/embedded_documents.json`
+
+Each embedded document preserves the original ID, type, text, metadata,
+and its generated embedding vector.
+
+
 ## Project structure
 
 ```
 ├── data/
 │   ├── commits.json, issues.json, pull_requests.json, docs.json   (Phase 1 output)
 │   └── processed/
-│       └── knowledge_base.json                                     (Phase 2 output — final deliverable)
+│       ├── knowledge_base.json                                     (Phase 2 output — final deliverable)
+|       └── embedded_documents.json           (Phase 3 output)
 └── src/
     ├── config.py                  # loads and validates environment variables
     ├── github_client.py           # GitHub authentication
@@ -60,7 +76,13 @@ Output: `data/processed/knowledge_base.json`
     ├── process_commits.py
     ├── process_issues.py
     ├── process_pull_requests.py
-    └── process_docs.py
+    ├── process_docs.py
+    ├── Embeddings/               #phase 3
+    │   ├── __init__.py
+    │   ├── loader.py              # loads knowledge base documents
+    │   ├── generator.py           # generates vector embeddings
+    │   ├── builder.py             # builds and saves embedded documents
+    │   └── main.py                # Phase 3 orchestrator
 ```
 
 ## Knowledge base document format
@@ -74,10 +96,26 @@ Each entry in `knowledge_base.json` looks like this:
   "metadata": { "...": "raw structured fields for filtering/display" }
 }
 ```
+## Embedding Output
 
+Each embedded document contains the original knowledge document
+alongside its generated vector embedding:
+
+```json
+{
+  "id": "commit_42b1f06",
+  "type": "commit",
+  "text": "Human-readable project event summary.",
+  "embedding": [0.012, -0.034, 0.056],
+  "metadata": {
+    "...": "original metadata"
+  }
+}
+```
 ## Status
 
 - ✅ Phase 1 — Data Collection: complete
 - ✅ Phase 2 — Knowledge Extraction: complete
-- ⬜ Phase 3 — Embedding Generation: next up for the team
-- ⬜ Phase 4–9: downstream phases (vector DB, RAG retrieval, AI reasoning, UI, intelligent features, DevOps integration)
+- ✅ Phase 3 — Embedding Generation: complete
+- ⬜ Phase 4 — Knowledge Database: next up for the team
+- ⬜ Phase 5–9: downstream phases (RAG retrieval, AI reasoning, UI, intelligent features, DevOps integration)
