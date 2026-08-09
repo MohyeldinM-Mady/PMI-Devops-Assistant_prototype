@@ -1,16 +1,34 @@
+import json
+import os
+from src.github_client import get_repo
+
 def fetch_docs():
     """
-    Fetches markdown documentation files from the repository.
-    Target fields: filename, path, raw content (walk the repo tree for .md files)
-    
-    TODO: Implement documentation fetching logic using get_repo()
+    Walks the repository tree and pulls the content of all markdown (.md) files.
+    Returns a list of dictionaries with filename, path, and raw content.
     """
-    return []
+    repo = get_repo()
+    contents = repo.get_contents("")
+    doc_data_list = []
+
+    while contents:
+        item = contents.pop(0)
+        if item.type == "dir":
+            contents.extend(repo.get_contents(item.path))
+        elif item.name.lower().endswith(".md"):
+            doc_data = {
+                "filename": item.name,
+                "path": item.path,
+                "content": item.decoded_content.decode("utf-8")
+            }
+            doc_data_list.append(doc_data)
+
+    return doc_data_list
 
 def save_docs(docs, path="data/docs.json"):
     """
-    Saves documentation data to a JSON file.
-    
-    TODO: Implement file saving logic
+    Writes the list of document dictionaries to a JSON file.
     """
-    pass
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(docs, f, indent=4, ensure_ascii=False)
