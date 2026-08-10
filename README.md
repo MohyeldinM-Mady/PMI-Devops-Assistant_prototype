@@ -1,13 +1,13 @@
 # PMI Data Collection & Knowledge Extraction
 
-Phase 1 - 5 of the PMI (Project Memory Intelligence) pipeline.
+Phases 1–6 of the PMI (Project Memory Intelligence) pipeline.
 
 ## What this does
 
 This project pulls a GitHub repository's history (commits, issues, pull
-requests, and documentation) and turns it into a structured knowledge base
-of human-readable documents — ready to be embedded and searched in later
-phases (embeddings, vector DB, RAG retrieval).
+requests, and documentation) and transforms it into structured project
+knowledge that can be embedded, indexed, retrieved, and used to generate
+context-aware answers.
 
 ## Setup
 
@@ -78,6 +78,20 @@ Run Phase 5 with:
 ```bash
 uv run python -m src.Retrieval.main
 ```
+**Step 6 — AI Reasoning:**
+
+Uses a Large Language Model through the Hugging Face Inference API to
+generate context-aware answers from the project knowledge retrieved in
+Phase 5.
+
+The LLM is instructed to use only the retrieved project context and avoid
+inventing project information.
+
+Run Phase 6 with:
+
+```bash
+uv run python -m src.Reasoning.main
+```
 
 ## Project structure
 
@@ -113,12 +127,17 @@ uv run python -m src.Retrieval.main
     │   ├── indexer.py                         # indexes documents into ChromaDB
     │   ├── query.py                           # similarity search and filtering
     │   └── main.py                            # Phase 4 orchestrator
-    └── Retrieval/                  # Phase 5
+    ├── Retrieval/                  # Phase 5
+    │   ├── __init__.py
+    │   ├── embedder.py             # embeds user queries
+    │   ├── query.py                # retrieves relevant documents
+    │   ├── context.py              # builds clean retrieved context
+    │   └── main.py                 # Phase 5 orchestrator
+    └── Reasoning/                  # Phase 6
         ├── __init__.py
-        ├── embedder.py             # embeds user queries
-        ├── query.py                # retrieves relevant documents
-        ├── context.py              # builds clean retrieved context
-        └── main.py                 # Phase 5 orchestrator
+        ├── llm.py                  # Hugging Face LLM API client
+        ├── prompt.py               # RAG prompt construction
+        └── main.py                 # Phase 6 orchestrator
 ```
 
 ## Knowledge base document format
@@ -200,6 +219,24 @@ retrieve_context(
     n_results=3
 )
 ```
+## AI Reasoning
+
+Phase 6 adds the LLM reasoning layer on top of the retrieval pipeline.
+
+The system sends the user's question together with the relevant project
+context retrieved in Phase 5 to an LLM through the Hugging Face Inference API.
+
+The prompt instructs the model to:
+
+- Answer using only the retrieved project context.
+- Avoid inventing project information.
+- State when the available context is insufficient.
+- Provide references to relevant project documents when possible.
+
+The LLM provider and model are configurable through environment variables,
+allowing the underlying model to be changed without modifying the RAG
+pipeline.
+
 ## Status
 
 - ✅ Phase 1 — Data Collection: complete
@@ -207,7 +244,7 @@ retrieve_context(
 - ✅ Phase 3 — Embedding Generation: complete
 - ✅ Phase 4 — Knowledge Database: complete
 - ✅ Phase 5 — RAG Retrieval: complete
-- ⬜ Phase 6 — AI Reasoning
+- ✅ Phase 6 — AI Reasoning: complete
 - ⬜ Phase 7 — User Interface
 - ⬜ Phase 8 — Intelligent Features
 - ⬜ Phase 9 — DevOps Integration
