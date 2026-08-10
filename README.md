@@ -1,6 +1,6 @@
 # PMI Data Collection & Knowledge Extraction
 
-Phase 1 - 3 of the PMI (Project Memory Intelligence) pipeline.
+Phase 1 - 4 of the PMI (Project Memory Intelligence) pipeline.
 
 ## What this does
 
@@ -55,6 +55,15 @@ Output: `data/processed/embedded_documents.json`
 Each embedded document preserves the original ID, type, text, metadata,
 and its generated embedding vector.
 
+**Step 4 — Vector Database & Retrieval (Phase 4):**
+
+Loads the generated embeddings and indexes them into a persistent ChromaDB
+collection. The vector database stores document text, embeddings, and
+metadata, and supports similarity search and metadata filtering.
+
+```bash
+uv run python -m src.VectorDB.main
+```
 
 ## Project structure
 
@@ -83,6 +92,13 @@ and its generated embedding vector.
     │   ├── generator.py           # generates vector embeddings
     │   ├── builder.py             # builds and saves embedded documents
     │   └── main.py                # Phase 3 orchestrator
+    └── VectorDB/                              # Phase 4
+        ├── __init__.py
+        ├── loader.py                          # loads embedded documents
+        ├── database.py                        # ChromaDB client and collection
+        ├── indexer.py                         # indexes documents into ChromaDB
+        ├── query.py                           # similarity search and filtering
+        └── main.py                            # Phase 4 orchestrator
 ```
 
 ## Knowledge base document format
@@ -112,10 +128,42 @@ alongside its generated vector embedding:
   }
 }
 ```
+## Vector Database
+
+Phase 4 uses ChromaDB as the project's vector database.
+
+The embedding pipeline stores each knowledge document with:
+
+- Document ID
+- Document text
+- Vector embedding
+- Metadata
+- Document type
+
+The database supports:
+
+- Persistent local storage
+- Similarity search
+- Top-K retrieval
+- Metadata filtering
+
+Example:
+
+```python
+similarity_search(
+    "Who worked on RAG documentation?",
+    n_results=3,
+    where={"type": "commit"}
+)
+```
 ## Status
 
 - ✅ Phase 1 — Data Collection: complete
 - ✅ Phase 2 — Knowledge Extraction: complete
 - ✅ Phase 3 — Embedding Generation: complete
-- ⬜ Phase 4 — Knowledge Database: next up for the team
-- ⬜ Phase 5–9: downstream phases (RAG retrieval, AI reasoning, UI, intelligent features, DevOps integration)
+- ✅ Phase 4 — Knowledge Database: next up for the team
+- ⬜ Phase 5 — RAG Retrieval
+- ⬜ Phase 6 — AI Reasoning
+- ⬜ Phase 7 — User Interface
+- ⬜ Phase 8 — Intelligent Features
+- ⬜ Phase 9 — DevOps Integration
