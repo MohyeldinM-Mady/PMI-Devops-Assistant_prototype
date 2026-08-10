@@ -1,6 +1,6 @@
 # PMI Data Collection & Knowledge Extraction
 
-Phase 1 - 4 of the PMI (Project Memory Intelligence) pipeline.
+Phase 1 - 5 of the PMI (Project Memory Intelligence) pipeline.
 
 ## What this does
 
@@ -55,7 +55,7 @@ Output: `data/processed/embedded_documents.json`
 Each embedded document preserves the original ID, type, text, metadata,
 and its generated embedding vector.
 
-**Step 4 — Vector Database & Retrieval (Phase 4):**
+**Step 4 — Vector Database (Phase 4):**
 
 Loads the generated embeddings and indexes them into a persistent ChromaDB
 collection. The vector database stores document text, embeddings, and
@@ -63,6 +63,20 @@ metadata, and supports similarity search and metadata filtering.
 
 ```bash
 uv run python -m src.VectorDB.main
+```
+**Step 5 — Retrieval (RAG):**
+
+Receives a user question, converts it into a vector embedding using the
+same Sentence Transformer model used during Phase 3, and performs semantic
+similarity search against the ChromaDB vector store.
+
+The retrieval layer returns the most relevant project documents and formats
+them into clean context ready for the LLM.
+
+Run Phase 5 with:
+
+```bash
+uv run python -m src.Retrieval.main
 ```
 
 ## Project structure
@@ -92,13 +106,19 @@ uv run python -m src.VectorDB.main
     │   ├── generator.py           # generates vector embeddings
     │   ├── builder.py             # builds and saves embedded documents
     │   └── main.py                # Phase 3 orchestrator
-    └── VectorDB/                              # Phase 4
+    ├── VectorDB/                              # Phase 4
+    │   ├── __init__.py
+    │   ├── loader.py                          # loads embedded documents
+    │   ├── database.py                        # ChromaDB client and collection
+    │   ├── indexer.py                         # indexes documents into ChromaDB
+    │   ├── query.py                           # similarity search and filtering
+    │   └── main.py                            # Phase 4 orchestrator
+    └── Retrieval/                  # Phase 5
         ├── __init__.py
-        ├── loader.py                          # loads embedded documents
-        ├── database.py                        # ChromaDB client and collection
-        ├── indexer.py                         # indexes documents into ChromaDB
-        ├── query.py                           # similarity search and filtering
-        └── main.py                            # Phase 4 orchestrator
+        ├── embedder.py             # embeds user queries
+        ├── query.py                # retrieves relevant documents
+        ├── context.py              # builds clean retrieved context
+        └── main.py                 # Phase 5 orchestrator
 ```
 
 ## Knowledge base document format
@@ -156,13 +176,37 @@ similarity_search(
     where={"type": "commit"}
 )
 ```
+## Retrieval
+
+Phase 5 implements the retrieval layer of the RAG pipeline.
+
+It converts user questions into embeddings using the same Sentence Transformer
+model used during Phase 3, performs semantic similarity search against
+ChromaDB, and builds a clean context from the most relevant project documents.
+
+The retrieved context includes:
+
+- Document type
+- Document ID
+- Author
+- Date
+- Document content
+
+Example:
+
+```python
+retrieve_context(
+    "What changes were made to the RAG system?",
+    n_results=3
+)
+```
 ## Status
 
 - ✅ Phase 1 — Data Collection: complete
 - ✅ Phase 2 — Knowledge Extraction: complete
 - ✅ Phase 3 — Embedding Generation: complete
-- ✅ Phase 4 — Knowledge Database: next up for the team
-- ⬜ Phase 5 — RAG Retrieval
+- ✅ Phase 4 — Knowledge Database: complete
+- ✅ Phase 5 — RAG Retrieval: complete
 - ⬜ Phase 6 — AI Reasoning
 - ⬜ Phase 7 — User Interface
 - ⬜ Phase 8 — Intelligent Features
