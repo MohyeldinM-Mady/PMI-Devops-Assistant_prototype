@@ -24,6 +24,14 @@ jobs:
           uv venv
           uv pip install -r requirements.txt
 
+      - name: Collect project data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          uv run python -m src.collect
+
       - name: Run PMI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
