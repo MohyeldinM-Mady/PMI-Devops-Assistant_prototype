@@ -1,6 +1,6 @@
 # PMI Data Collection & Knowledge Extraction
 
-Phases 1–6 of the PMI (Project Memory Intelligence) pipeline.
+Phases 1–6 and Phase 9 of the PMI (Project Memory Intelligence) pipeline.
 
 ## What this does
 
@@ -8,6 +8,10 @@ This project pulls a GitHub repository's history (commits, issues, pull
 requests, and documentation) and transforms it into structured project
 knowledge that can be embedded, indexed, retrieved, and used to generate
 context-aware answers.
+
+In Phase 9, PMI is integrated into GitHub Actions to automatically analyze
+new and updated Pull Requests and generate AI-powered recommendations based
+on the project's historical knowledge.
 
 ## Setup
 
@@ -92,7 +96,43 @@ Run Phase 6 with:
 ```bash
 uv run python -m src.Reasoning.main
 ```
+**Step 7 — DevOps Integration:**
 
+Integrates PMI into the GitHub Actions CI/CD pipeline to automatically
+analyze new and updated Pull Requests.
+
+When a Pull Request is opened or updated, GitHub Actions runs the PMI
+pipeline, retrieves the changed files, searches the project memory for
+relevant historical context, and uses the LLM to generate an
+AI-powered Pull Request review.
+
+The generated analysis is automatically posted as a comment on the
+Pull Request.
+
+The Phase 9 workflow performs the following steps:
+
+1. Collect project history.
+2. Build the knowledge base.
+3. Generate embeddings.
+4. Build the ChromaDB vector database.
+5. Retrieve Pull Request changes.
+6. Retrieve relevant historical context.
+7. Generate an AI-powered Pull Request analysis.
+8. Post the analysis as a GitHub Pull Request comment.
+
+The GitHub Actions workflow is located at:
+
+```text
+.github/workflows/pmi-pr.yml
+```
+The workflow is triggered when a Pull Request is opened or updated:
+```yaml
+on:
+  pull_request:
+    types: [opened, synchronize]
+```
+Run Phase 9 automatically through GitHub Actions by opening or updating
+a Pull Request.
 ## Project structure
 
 ```
@@ -101,6 +141,9 @@ uv run python -m src.Reasoning.main
 │   └── processed/
 │       ├── knowledge_base.json                                     (Phase 2 output — final deliverable)
 |       └── embedded_documents.json           (Phase 3 output)
+├── .github/
+│   └── workflows/
+│       └── pmi-pr.yml              # Phase 9 GitHub Actions workflow
 └── src/
     ├── config.py                  # loads and validates environment variables
     ├── github_client.py           # GitHub authentication
@@ -133,11 +176,17 @@ uv run python -m src.Reasoning.main
     │   ├── query.py                # retrieves relevant documents
     │   ├── context.py              # builds clean retrieved context
     │   └── main.py                 # Phase 5 orchestrator
-    └── Reasoning/                  # Phase 6
+    ├── Reasoning/                  # Phase 6
+    │   ├── __init__.py
+    │   ├── llm.py                  # Hugging Face LLM API client
+    │   ├── prompt.py               # RAG prompt construction
+    │   └── main.py                 # Phase 6 orchestrator
+    └── DevOps/                     # Phase 9
         ├── __init__.py
-        ├── llm.py                  # Hugging Face LLM API client
-        ├── prompt.py               # RAG prompt construction
-        └── main.py                 # Phase 6 orchestrator
+        ├── github.py               # GitHub API integration and PR comments
+        ├── retrieval.py            # retrieves historical context for PR changes
+        ├── analyzer.py             # generates AI-powered PR analysis
+        └── main.py                 # Phase 9 orchestrator
 ```
 
 ## Knowledge base document format
@@ -237,6 +286,100 @@ The LLM provider and model are configurable through environment variables,
 allowing the underlying model to be changed without modifying the RAG
 pipeline.
 
+
+## Architecture
+
+PMI follows a multi-stage pipeline that transforms GitHub project history
+into searchable project memory and uses it to analyze Pull Requests.
+
+```text
+GitHub Repository
+       │
+       ├── Commits
+       ├── Issues
+       ├── Pull Requests
+       └── Documentation
+              │
+              ▼
+      Phase 1 — Data Collection
+              │
+              ▼
+    Phase 2 — Knowledge Extraction
+              │
+              ▼
+    Phase 3 — Embedding Generation
+              │
+              ▼
+       Phase 4 — ChromaDB
+              │
+              ▼
+        Project Memory
+              │
+              │
+       ┌──────▼──────┐
+       │             │
+       │  Pull Request
+       │             │
+       ▼             │
+ Changed Files       │
+       │             │
+       ▼             │
+ Phase 5 — Retrieval │
+       │             │
+       ▼             │
+ Historical Context ◄┘
+       │
+       ▼
+ Phase 6 — AI Reasoning
+       │
+       ▼
+   AI PR Analysis
+       │
+       ▼
+ Phase 9 — GitHub Actions
+       │
+       ▼
+ GitHub Pull Request
+       │
+       ▼
+   PMI AI Comment
+```
+Runtime Flow
+```markdown
+When a Pull Request is opened or updated, GitHub Actions automatically
+triggers PMI.
+
+Pull Request
+     │
+     ▼
+GitHub Actions
+     │
+     ├── Collect project history
+     ├── Build knowledge base
+     ├── Generate embeddings
+     ├── Build ChromaDB
+     │
+     ▼
+Retrieve PR changes
+     │
+     ▼
+Search project memory
+     │
+     ▼
+Historical context
+     │
+     ▼
+LLM reasoning
+     │
+     ▼
+AI-generated review
+     │
+     ▼
+Post comment on Pull Request
+
+This allows PMI to combine the current Pull Request with the project's
+historical knowledge before generating recommendations.
+```
 ## Status
 
 - ✅ Phase 1 — Data Collection: complete
@@ -247,4 +390,4 @@ pipeline.
 - ✅ Phase 6 — AI Reasoning: complete
 - ⬜ Phase 7 — User Interface
 - ⬜ Phase 8 — Intelligent Features
-- ⬜ Phase 9 — DevOps Integration
+- ✅ Phase 9 — DevOps Integration
