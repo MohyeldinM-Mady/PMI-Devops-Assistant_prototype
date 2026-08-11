@@ -1,6 +1,6 @@
 # PMI Data Collection & Knowledge Extraction
 
-Phases 1–6 and Phase 9 of the PMI (Project Memory Intelligence) pipeline.
+Phases 1–7 and Phase 9 of the PMI (Project Memory Intelligence) pipeline.
 
 ## What this does
 
@@ -133,6 +133,66 @@ on:
 ```
 Run Phase 9 automatically through GitHub Actions by opening or updating
 a Pull Request.
+
+
+**Step 7 — Chatbot UI & API (Phase 7):**
+
+Provides a web-based chatbot interface for interacting with the project's
+knowledge base.
+
+The chatbot uses a FastAPI backend connected to the existing RAG pipeline.
+User questions are retrieved against the ChromaDB vector database, relevant
+historical context is built, and the LLM generates a context-aware response.
+
+The chatbot interface is built using Streamlit and supports multiple chat
+sessions with conversation history during the active session.
+
+The Phase 7 architecture is:
+
+```text
+User
+ │
+ ▼
+Streamlit Chatbot
+ │
+ ▼
+FastAPI /chat
+ │
+ ▼
+RAG Retrieval
+ │
+ ▼
+ChromaDB
+ │
+ ▼
+Historical Context
+ │
+ ▼
+LLM
+ │
+ ▼
+AI Response
+```
+The API is located at:
+```bash
+src/API/main.py
+```
+The chatbot UI is located at:
+```bash
+src/UI/app.py
+```
+Run the API with:
+```bash
+uv run uvicorn src.API.main:app --reload
+
+Run the chatbot UI with:
+
+uv run streamlit run src/UI/app.py
+```
+The chatbot can answer questions about the project's historical knowledge
+and maintain multiple conversations during the active session.
+
+
 ## Project structure
 
 ```
@@ -157,36 +217,49 @@ a Pull Request.
     ├── process_issues.py
     ├── process_pull_requests.py
     ├── process_docs.py
-    ├── Embeddings/               #phase 3
+
+    ├── Embeddings/                # Phase 3
     │   ├── __init__.py
     │   ├── loader.py              # loads knowledge base documents
     │   ├── generator.py           # generates vector embeddings
     │   ├── builder.py             # builds and saves embedded documents
     │   └── main.py                # Phase 3 orchestrator
-    ├── VectorDB/                              # Phase 4
+
+    ├── VectorDB/                  # Phase 4
     │   ├── __init__.py
-    │   ├── loader.py                          # loads embedded documents
-    │   ├── database.py                        # ChromaDB client and collection
-    │   ├── indexer.py                         # indexes documents into ChromaDB
-    │   ├── query.py                           # similarity search and filtering
-    │   └── main.py                            # Phase 4 orchestrator
-    ├── Retrieval/                  # Phase 5
+    │   ├── loader.py              # loads embedded documents
+    │   ├── database.py            # ChromaDB client and collection
+    │   ├── indexer.py             # indexes documents into ChromaDB
+    │   ├── query.py               # similarity search and filtering
+    │   └── main.py                # Phase 4 orchestrator
+
+    ├── Retrieval/                 # Phase 5
     │   ├── __init__.py
-    │   ├── embedder.py             # embeds user queries
-    │   ├── query.py                # retrieves relevant documents
-    │   ├── context.py              # builds clean retrieved context
-    │   └── main.py                 # Phase 5 orchestrator
-    ├── Reasoning/                  # Phase 6
+    │   ├── embedder.py            # embeds user queries
+    │   ├── query.py               # retrieves relevant documents
+    │   ├── context.py             # builds clean retrieved context
+    │   └── main.py                # Phase 5 orchestrator
+
+    ├── Reasoning/                 # Phase 6
     │   ├── __init__.py
-    │   ├── llm.py                  # Hugging Face LLM API client
-    │   ├── prompt.py               # RAG prompt construction
-    │   └── main.py                 # Phase 6 orchestrator
-    └── DevOps/                     # Phase 9
+    │   ├── llm.py                 # Hugging Face LLM API client
+    │   ├── prompt.py              # RAG prompt construction
+    │   └── main.py                # Phase 6 orchestrator
+
+    ├── API/                       # Phase 7
+    │   ├── __init__.py
+    │   └── main.py                # FastAPI backend and /chat endpoint
+
+    ├── UI/                        # Phase 7
+    │   ├── __init__.py
+    │   └── app.py                 # Streamlit chatbot interface
+
+    └── DevOps/                    # Phase 9
         ├── __init__.py
-        ├── github.py               # GitHub API integration and PR comments
-        ├── retrieval.py            # retrieves historical context for PR changes
-        ├── analyzer.py             # generates AI-powered PR analysis
-        └── main.py                 # Phase 9 orchestrator
+        ├── github.py              # GitHub API integration and PR comments
+        ├── retrieval.py           # retrieves historical context for PR changes
+        ├── analyzer.py            # generates AI-powered PR analysis
+        └── main.py                # Phase 9 orchestrator
 ```
 
 ## Knowledge base document format
@@ -286,11 +359,11 @@ The LLM provider and model are configurable through environment variables,
 allowing the underlying model to be changed without modifying the RAG
 pipeline.
 
-
 ## Architecture
 
 PMI follows a multi-stage pipeline that transforms GitHub project history
-into searchable project memory and uses it to analyze Pull Requests.
+into searchable project memory and uses it for both interactive questions
+and Pull Request analysis.
 
 ```text
 GitHub Repository
@@ -315,40 +388,63 @@ GitHub Repository
               ▼
         Project Memory
               │
-              │
-       ┌──────▼──────┐
-       │             │
-       │  Pull Request
-       │             │
-       ▼             │
- Changed Files       │
-       │             │
-       ▼             │
- Phase 5 — Retrieval │
-       │             │
-       ▼             │
- Historical Context ◄┘
+       ┌──────┴───────┐
+       │              │
+       ▼              ▼
+ Phase 5 —        Pull Request
+ Retrieval        Changes
+       │              │
+       ▼              ▼
+ Historical      Phase 9 —
+ Context         DevOps Integration
+       │              │
+       ▼              ▼
+ Phase 6 —       AI PR Analysis
+ AI Reasoning        │
+       │              ▼
+       ▼         GitHub PR Comment
+   AI Response
        │
        ▼
- Phase 6 — AI Reasoning
+ Phase 7 — Chatbot UI & API
        │
        ▼
-   AI PR Analysis
-       │
-       ▼
- Phase 9 — GitHub Actions
-       │
-       ▼
- GitHub Pull Request
-       │
-       ▼
-   PMI AI Comment
+   User Interaction
+Runtime Flow — Chatbot
 ```
-Runtime Flow
-```markdown
+When a user asks a question, the chatbot uses the existing RAG pipeline
+to retrieve relevant project history and generate a context-aware answer.
+```text
+User
+  │
+  ▼
+Streamlit Chatbot
+  │
+  ▼
+FastAPI /chat
+  │
+  ▼
+Phase 5 — Retrieval
+  │
+  ▼
+ChromaDB
+  │
+  ▼
+Historical Context
+  │
+  ▼
+Phase 6 — AI Reasoning
+  │
+  ▼
+AI Response
+  │
+  ▼
+Streamlit UI
+Runtime Flow — Pull Request Analysis
+```
 When a Pull Request is opened or updated, GitHub Actions automatically
 triggers PMI.
-
+```text
 Pull Request
      │
      ▼
@@ -376,10 +472,11 @@ AI-generated review
      │
      ▼
 Post comment on Pull Request
-
+```
 This allows PMI to combine the current Pull Request with the project's
 historical knowledge before generating recommendations.
-```
+
+
 ## Status
 
 - ✅ Phase 1 — Data Collection: complete
@@ -388,6 +485,6 @@ historical knowledge before generating recommendations.
 - ✅ Phase 4 — Knowledge Database: complete
 - ✅ Phase 5 — RAG Retrieval: complete
 - ✅ Phase 6 — AI Reasoning: complete
-- ⬜ Phase 7 — User Interface
+- ✅ Phase 7 — User Interface: complete
 - ⬜ Phase 8 — Intelligent Features
-- ✅ Phase 9 — DevOps Integration
+- ✅ Phase 9 — DevOps Integration: complete
