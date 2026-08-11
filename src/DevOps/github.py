@@ -29,7 +29,6 @@ def get_changed_files(
         for file in response.json()
     ]
 
-
 def post_pr_comment(
     owner: str,
     repo: str,
@@ -53,6 +52,11 @@ def post_pr_comment(
         headers=headers,
         json={"body": body},
     )
+
+    if not response.ok:
+        print("=== GITHUB COMMENT ERROR ===")
+        print("STATUS:", response.status_code)
+        print("RESPONSE:", response.text)
 
     response.raise_for_status()
 
