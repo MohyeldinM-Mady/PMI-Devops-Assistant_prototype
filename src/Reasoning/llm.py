@@ -35,8 +35,4 @@ def generate_response(prompt: str) -> str:
 
     # return response.choices[0].message.content or ""
     content = response.choices[0].message.content
-
-    print("=== AI CONTENT ===")
-    print(repr(content))
-
     return content or ""
