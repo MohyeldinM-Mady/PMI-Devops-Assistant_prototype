@@ -31,14 +31,6 @@ def generate_response(prompt: str) -> str:
         temperature=0.2,
     )
 
-    print("=== HF RAW RESPONSE ===")
-    print(repr(response))
 
-    print("=== CHOICES ===")
-    print(repr(response.choices))
-
-    if response.choices:
-        print("=== MESSAGE ===")
-        print(repr(response.choices[0].message))
 
     return response.choices[0].message.content or ""

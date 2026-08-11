@@ -38,7 +38,6 @@ If there are no meaningful risks, say so clearly.
     # return generate_response(prompt)
     analysis = generate_response(prompt)
 
-    print("=== RAW AI RESPONSE ===")
-    print(repr(analysis))
+
 
     return analysis
