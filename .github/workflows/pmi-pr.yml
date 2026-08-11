@@ -33,6 +33,18 @@ jobs:
         run: |
           uv run python -m src.collect
 
+      - name: Build knowledge base
+        run: |
+          uv run python -m src.build_knowledge_base
+
+      - name: Generate embeddings
+        run: |
+          uv run python -m src.Embeddings.main
+
+      - name: Build vector database
+        run: |
+          uv run python -m src.VectorDB.main
+
       - name: Run PMI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
