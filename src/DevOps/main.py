@@ -2,6 +2,7 @@ import os
 
 from src.DevOps.github import get_changed_files
 from src.DevOps.retrieval import retrieve_historical_context
+from src.DevOps.analyzer import analyze_pull_request
 
 
 def main():
@@ -14,16 +15,19 @@ def main():
 
     print(f"Changed files: {len(files)}")
 
-    for file in files:
-        print(f"\nFile: {file['filename']}")
-        print(f"Status: {file['status']}")
-        print(f"Patch:\n{file['patch']}")
+    historical_context = retrieve_historical_context(files)
 
     print("\n=== Historical Context ===")
+    print(historical_context)
 
-    context = retrieve_historical_context(files)
+    print("\n=== PMI AI Analysis ===")
 
-    print(context)
+    analysis = analyze_pull_request(
+        files,
+        historical_context,
+    )
+
+    print(analysis)
 
 
 if __name__ == "__main__":
