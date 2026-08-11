@@ -1,0 +1,30 @@
+import os
+
+import requests
+
+
+def get_changed_files(
+    owner: str,
+    repo: str,
+    pr_number: int,
+) -> list[dict]:
+    token = os.getenv("GITHUB_TOKEN")
+
+    url = f"https://api.github.com/repos/{owner}/{repo}/pulls/{pr_number}/files"
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+    }
+
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+
+    return [
+        {
+            "filename": file["filename"],
+            "status": file["status"],
+            "patch": file.get("patch", ""),
+        }
+        for file in response.json()
+    ]
