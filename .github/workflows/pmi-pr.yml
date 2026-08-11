@@ -48,6 +48,8 @@ jobs:
       - name: Run PMI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          LLM_MODEL: openai/gpt-oss-20b:groq
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          uv run python -m src.DevOps.main
+         uv run python -m src.DevOps.main
