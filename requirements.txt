@@ -6,4 +6,6 @@ chromadb
 torch
 transformers
 fastapi
+uvicorn
 streamlit
+huggingface_hub
