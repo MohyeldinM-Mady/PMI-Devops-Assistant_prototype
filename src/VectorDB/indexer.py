@@ -8,14 +8,29 @@ def index_documents():
 
     for doc in documents:
         metadata = {
-          **doc["metadata"],
-          "type": doc["type"]
-       }
+            **doc["metadata"],
+            "type": doc["type"],
+        }
+
+        clean_metadata = {}
+
+        for key, value in metadata.items():
+            if value is None:
+                continue
+
+            if isinstance(value, list):
+                if not value:
+                    continue
+
+                value = ", ".join(str(item) for item in value)
+
+            clean_metadata[key] = value
+
         collection.upsert(
             ids=[doc["id"]],
             documents=[doc["text"]],
             embeddings=[doc["embedding"]],
-            metadatas=[metadata],
+            metadatas=[clean_metadata],
         )
 
     print(f"Indexed {len(documents)} documents")

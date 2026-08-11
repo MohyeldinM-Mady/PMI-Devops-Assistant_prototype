@@ -3,7 +3,6 @@ import os
 from dotenv import load_dotenv
 from huggingface_hub import InferenceClient
 
-
 load_dotenv()
 
 print("HF token loaded:", bool(os.getenv("HF_TOKEN")))
@@ -28,8 +27,12 @@ def generate_response(prompt: str) -> str:
                 "content": prompt,
             }
         ],
-        max_tokens=512,
+        max_tokens=4096,
         temperature=0.2,
     )
 
-    return response.choices[0].message.content
+
+
+    # return response.choices[0].message.content or ""
+    content = response.choices[0].message.content
+    return content or ""

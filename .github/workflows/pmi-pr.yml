@@ -1,0 +1,55 @@
+name: PMI PR Analysis
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install dependencies
+        run: |
+          uv venv
+          uv pip install -r requirements.txt
+
+      - name: Collect project data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          uv run python -m src.collect
+
+      - name: Build knowledge base
+        run: |
+          uv run python -m src.build_knowledge_base
+
+      - name: Generate embeddings
+        run: |
+          uv run python -m src.Embeddings.main
+
+      - name: Build vector database
+        run: |
+          uv run python -m src.VectorDB.main
+
+      - name: Run PMI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          LLM_MODEL: openai/gpt-oss-20b:groq
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+         uv run python -m src.DevOps.main
