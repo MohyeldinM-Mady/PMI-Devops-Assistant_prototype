@@ -28,3 +28,32 @@ def get_changed_files(
         }
         for file in response.json()
     ]
+
+
+def post_pr_comment(
+    owner: str,
+    repo: str,
+    pr_number: int,
+    body: str,
+) -> None:
+    token = os.getenv("GITHUB_TOKEN")
+
+    url = (
+        f"https://api.github.com/repos/"
+        f"{owner}/{repo}/issues/{pr_number}/comments"
+    )
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+    }
+
+    response = requests.post(
+        url,
+        headers=headers,
+        json={"body": body},
+    )
+
+    response.raise_for_status()
+
+    print("PMI analysis posted to PR successfully.")
