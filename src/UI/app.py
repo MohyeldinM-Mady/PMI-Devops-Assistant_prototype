@@ -1,5 +1,17 @@
+import sys
+from pathlib import Path
+
 import requests
 import streamlit as st
+
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
+
+from src.pipeline import prepare_current_repository
 
 
 st.set_page_config(
@@ -9,7 +21,10 @@ st.set_page_config(
 )
 
 
-# Initialize chat storage
+# ============================================================
+# Chat Storage
+# ============================================================
+
 if "chats" not in st.session_state:
     st.session_state.chats = {}
 
@@ -33,7 +48,10 @@ def create_new_chat():
     st.session_state.current_chat_id = chat_id
 
 
+# ============================================================
 # Sidebar
+# ============================================================
+
 with st.sidebar:
     st.title("PMI")
     st.caption("Project Memory Intelligence")
@@ -58,24 +76,85 @@ with st.sidebar:
             st.rerun()
 
 
-# Current chat
+# ============================================================
+# Current Chat
+# ============================================================
+
 current_chat = st.session_state.chats[
     st.session_state.current_chat_id
 ]
 
-st.title("🤖 PMI")
-st.caption("Project Memory Intelligence")
+
+# ============================================================
+# Tabs
+# ============================================================
+
+tab_chat, tab_retrieve = st.tabs(
+    ["💬 Chatbot", "📥 Retrieve Data from Current Repo"]
+)
 
 
-# Display current conversation
-for message in current_chat["messages"]:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+# ============================================================
+# Chatbot Tab
+# ============================================================
+
+with tab_chat:
+    st.title("🤖 PMI")
+    st.caption("Project Memory Intelligence")
+
+    # Display current conversation
+    for message in current_chat["messages"]:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
 
-# User input
-question = st.chat_input("Ask PMI about your project...")
+# ============================================================
+# Retrieve Data from Current Repo
+# ============================================================
 
+with tab_retrieve:
+    st.header("📥 Retrieve Data from Current Repo")
+
+    st.write(
+        "Prepare the current GitHub repository for PMI "
+        "by collecting data, building the knowledge base, "
+        "generating embeddings, and updating the vector database."
+    )
+
+    if st.button(
+        "🚀 Prepare Repository",
+        use_container_width=True,
+    ):
+        try:
+            with st.spinner(
+                "Preparing repository... "
+                "This may take a few minutes."
+            ):
+                prepare_current_repository()
+
+            st.success(
+                "✅ Repository is ready. "
+                "You can now use the Chatbot."
+            )
+
+        except Exception as e:
+            st.error(
+                f"❌ Repository preparation failed: {e}"
+            )
+
+
+# ============================================================
+# Chat Input
+# ============================================================
+
+question = st.chat_input(
+    "Ask PMI about your project..."
+)
+
+
+# ============================================================
+# Process Question
+# ============================================================
 
 if question:
     messages = current_chat["messages"]
@@ -88,27 +167,29 @@ if question:
         }
     )
 
-    with st.chat_message("user"):
-        st.markdown(question)
+    # Show user message
+    with tab_chat:
+        with st.chat_message("user"):
+            st.markdown(question)
 
-    # Send previous conversation history to API
-    history = messages[:-1]
+        # Send previous conversation history to API
+        history = messages[:-1]
 
-    with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
-            response = requests.post(
-                "http://127.0.0.1:8000/chat",
-                json={
-                    "question": question,
-                    "history": history,
-                },
-            )
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking..."):
+                response = requests.post(
+                    "http://127.0.0.1:8000/chat",
+                    json={
+                        "question": question,
+                        "history": history,
+                    },
+                )
 
-            response.raise_for_status()
+                response.raise_for_status()
 
-            answer = response.json()["answer"]
+                answer = response.json()["answer"]
 
-        st.markdown(answer)
+            st.markdown(answer)
 
     # Save assistant response
     messages.append(
@@ -121,3 +202,5 @@ if question:
     # Use first question as chat title
     if current_chat["title"] == "New Chat":
         current_chat["title"] = question[:35]
+
+    st.rerun()
