@@ -42,7 +42,14 @@ def generate_response(
         temperature=temperature,
     )
 
-    content = response.choices[0].message.content
+    choice = response.choices[0]
+
+    print("LLM DEBUG")
+    print(f"finish_reason: {choice.finish_reason}")
+    print(f"message: {choice.message}")
+    print(f"usage: {getattr(response, 'usage', None)}")
+
+    content = choice.message.content
 
     if not content:
         print("WARNING: LLM returned an empty response.")
