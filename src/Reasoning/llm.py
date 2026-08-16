@@ -44,11 +44,6 @@ def generate_response(
 
     choice = response.choices[0]
 
-    print("LLM DEBUG")
-    print(f"finish_reason: {choice.finish_reason}")
-    print(f"message: {choice.message}")
-    print(f"usage: {getattr(response, 'usage', None)}")
-
     content = choice.message.content
 
     if not content:
