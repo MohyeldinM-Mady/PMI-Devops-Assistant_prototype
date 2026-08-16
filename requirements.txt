@@ -9,4 +9,3 @@ fastapi
 uvicorn
 streamlit
 huggingface_hub
-pytest

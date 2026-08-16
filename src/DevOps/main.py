@@ -8,13 +8,30 @@ from src.DevOps.retrieval import retrieve_historical_context
 def main():
     repository = os.environ["GITHUB_REPOSITORY"]
     pr_number = int(os.environ["PR_NUMBER"])
+
     owner, repo = repository.split("/", 1)
 
-    files = get_changed_files(owner, repo, pr_number)
+    files = get_changed_files(
+        owner,
+        repo,
+        pr_number,
+    )
+
     print(f"Changed files: {len(files)}")
 
     historical_context = retrieve_historical_context(files)
-    analysis = analyze_pull_request(files, historical_context)
+
+    analysis = analyze_pull_request(
+        files,
+        historical_context,
+    )
+
+    if not analysis:
+        analysis = (
+            "⚠️ PMI could not generate a review for this pull request.\n\n"
+            "The PR changes and historical context were retrieved "
+            "successfully, but the reasoning model returned an empty response."
+        )
 
     comment = f"""## 🤖 PMI AI Analysis
 
@@ -24,7 +41,13 @@ def main():
 *Generated automatically by PMI.*
 """
 
-    post_pr_comment(owner, repo, pr_number, comment)
+    post_pr_comment(
+        owner,
+        repo,
+        pr_number,
+        comment,
+    )
+
     print("PMI analysis posted to PR successfully.")
 
 
