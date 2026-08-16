@@ -33,6 +33,7 @@ if "current_chat_id" not in st.session_state:
     st.session_state.chats["chat_1"] = {
         "title": "New Chat",
         "messages": [],
+        "active_reference": None,
     }
 
 
@@ -43,6 +44,7 @@ def create_new_chat():
     st.session_state.chats[chat_id] = {
         "title": "New Chat",
         "messages": [],
+        "active_reference": None,
     }
 
     st.session_state.current_chat_id = chat_id
@@ -182,12 +184,15 @@ if question:
                     json={
                         "question": question,
                         "history": history,
+                        "active_reference": current_chat.get("active_reference"),
                     },
                 )
 
                 response.raise_for_status()
 
-                answer = response.json()["answer"]
+                payload = response.json()
+                answer = payload["answer"]
+                current_chat["active_reference"] = payload.get("active_reference")
 
             st.markdown(answer)
 

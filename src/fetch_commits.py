@@ -1,31 +1,26 @@
 import json
-import os
+
+from src.config import DATA_DIR, validate_github_config
 from src.github_client import get_repo
 
-def fetch_commits():
-    """
-    Pulls all commits from the repository and returns a list of dictionaries.
-    """
-    repo = get_repo()
-    commits = repo.get_commits()
-    commit_data_list = []
 
-    for commit in commits:
-        commit_data = {
+def fetch_commits():
+    validate_github_config()
+    repo = get_repo()
+    return [
+        {
             "sha": commit.sha,
             "author": commit.commit.author.name if commit.commit.author else None,
             "date": commit.commit.author.date.isoformat() if commit.commit.author else None,
             "message": commit.commit.message,
-            "files_changed": [f.filename for f in commit.files]
+            "files_changed": [file.filename for file in commit.files],
         }
-        commit_data_list.append(commit_data)
+        for commit in repo.get_commits()
+    ]
 
-    return commit_data_list
 
-def save_commits(commits, path="data/commits.json"):
-    """
-    Writes the list of commit dictionaries to a JSON file.
-    """
-    os.makedirs(os.path.dirname(path), exist_ok=True)
+def save_commits(commits, path=DATA_DIR / "commits.json"):
+    path = __import__("pathlib").Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(commits, f, indent=4, ensure_ascii=False)

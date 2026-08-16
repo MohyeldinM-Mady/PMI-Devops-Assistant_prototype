@@ -1,0 +1,244 @@
+[
+    {
+        "number": 15,
+        "title": "feat: add PMI chatbot UI and API",
+        "body": "## What changed\r\n\r\n- Added FastAPI `/chat` endpoint\r\n- Connected retrieval and LLM reasoning\r\n- Added Streamlit chatbot UI\r\n- Added conversation history\r\n- Added multiple chat sessions\r\n- Added New Chat functionality\r\n\r\n## Testing\r\n\r\n- Tested FastAPI locally\r\n- Tested Streamlit UI locally\r\n- Verified project questions return RAG-based answers\r\n- Verified conversation history works",
+        "author": "amrhany964",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-11T23:08:16+00:00",
+        "merged_at": "2026-08-11T23:11:07+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            "requirements.txt",
+            "src/API/__init__.py",
+            "src/API/main.py",
+            "src/UI/__init__.py",
+            "src/UI/app.py"
+        ]
+    },
+    {
+        "number": 14,
+        "title": "ci: add PMI pull request workflow",
+        "body": "## Phase 9 — DevOps Integration\r\n\r\n- Add GitHub Actions workflow triggered on pull request creation and updates.\r\n- Checkout the repository.\r\n- Verify PR metadata is accessible from the workflow.\r\n- Prepare the workflow for PMI analysis integration.",
+        "author": "amrhany964",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-11T12:20:41+00:00",
+        "merged_at": "2026-08-11T15:45:59+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            ".github/workflows/pmi-pr.yml",
+            "src/DevOps/__init__.py",
+            "src/DevOps/analyzer.py",
+            "src/DevOps/github.py",
+            "src/DevOps/main.py",
+            "src/DevOps/retrieval.py",
+            "src/Reasoning/llm.py",
+            "src/VectorDB/indexer.py"
+        ]
+    },
+    {
+        "number": 13,
+        "title": "feat: add AI reasoning with RAG",
+        "body": null,
+        "author": "amrhany964",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-10T13:28:32+00:00",
+        "merged_at": "2026-08-10T13:28:48+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            ".env.example",
+            "requirements.txt",
+            "src/Reasoning/__init__.py",
+            "src/Reasoning/llm.py",
+            "src/Reasoning/main.py",
+            "src/Reasoning/prompt.py"
+        ]
+    },
+    {
+        "number": 12,
+        "title": "feat: add RAG retrieval pipeline",
+        "body": null,
+        "author": "amrhany964",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-10T12:35:25+00:00",
+        "merged_at": "2026-08-10T12:35:35+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            "src/Retrieval/__init__.py",
+            "src/Retrieval/context.py",
+            "src/Retrieval/embedder.py",
+            "src/Retrieval/main.py",
+            "src/Retrieval/query.py"
+        ]
+    },
+    {
+        "number": 11,
+        "title": "phase 4 : vector store",
+        "body": null,
+        "author": "amrhany964",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-10T11:46:39+00:00",
+        "merged_at": "2026-08-10T11:47:03+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            "requirements.txt",
+            "src/VectorDB/__init__.py",
+            "src/VectorDB/database.py",
+            "src/VectorDB/indexer.py",
+            "src/VectorDB/loader.py",
+            "src/VectorDB/main.py",
+            "src/VectorDB/query.py"
+        ]
+    },
+    {
+        "number": 10,
+        "title": "add embedding generation pipeline",
+        "body": "## What was added\r\n- Added Sentence Transformers embedding generation\r\n- Added knowledge base document loading\r\n- Added embedded document builder\r\n- Added embedding output generation\r\n- Added required dependency\r\n\r\n## Phase\r\nPhase 3 — Embedding Generation\r\n\r\n## Output\r\nGenerated embedding data is stored locally under `data/`.",
+        "author": "amrhany964",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-09T06:46:20+00:00",
+        "merged_at": "2026-08-09T06:47:56+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            ".gitignore",
+            "requirements.txt",
+            "src/Embeddings/__init__.py",
+            "src/Embeddings/builder.py",
+            "src/Embeddings/generator.py",
+            "src/Embeddings/loader.py",
+            "src/Embeddings/main.py"
+        ]
+    },
+    {
+        "number": 9,
+        "title": "Update README to cover Phase 1 and Phase 2",
+        "body": "Updates the README to document both completed phases (Phase 1: Data Collection, Phase 2: Knowledge Extraction), including setup instructions, how to run the full pipeline, project structure, and the knowledge base document format — so the rest of the team can pick up from here for Phase 3.",
+        "author": "Mourad-Fikry",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-09T02:31:19+00:00",
+        "merged_at": "2026-08-09T02:32:15+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            "README.md"
+        ]
+    },
+    {
+        "number": 8,
+        "title": "Implement build_knowledge_base.py orchestrator",
+        "body": "Implements build_knowledge_base.py — the Phase 2 orchestrator.\r\n\r\nRuns all four processors (process_commits, process_issues, process_pull_requests, process_docs), combines their output into a single list, and saves it to data/processed/knowledge_base.json.\r\n\r\nThis is the final Phase 2 deliverable: a unified knowledge base ready for embedding generation in Phase 3.",
+        "author": "Mourad-Fikry",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-09T02:25:30+00:00",
+        "merged_at": "2026-08-09T02:25:54+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            "src/build_knowledge_base.py"
+        ]
+    },
+    {
+        "number": 7,
+        "title": "Implement process_docs.py",
+        "body": "Implements process_docs.py — reads data/docs.json and converts each markdown file into a human-readable text document ready for embedding.\r\n\r\nEach document includes:\r\n- id (based on filename)\r\n- text (file path + content, truncated to 1000 chars for the embedding-ready version)\r\n- metadata (filename, path, full untruncated content)",
+        "author": "Mourad-Fikry",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-09T02:21:44+00:00",
+        "merged_at": "2026-08-09T02:22:01+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            "src/process_docs.py"
+        ]
+    },
+    {
+        "number": 6,
+        "title": "Implement process_pull_requests.py",
+        "body": "Implements process_pull_requests.py — reads data/pull_requests.json and converts each PR into a human-readable text document ready for embedding.\r\n\r\nEach document includes:\r\n- id (PR number)\r\n- text (readable summary: title, author, status, files changed, linked issues)\r\n- metadata (number, author, state, merged, created_at, files_changed, linked_issues)",
+        "author": "Mourad-Fikry",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-09T02:18:47+00:00",
+        "merged_at": "2026-08-09T02:18:58+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            "src/process_pull_requests.py"
+        ]
+    },
+    {
+        "number": 5,
+        "title": "Implement process_issues.py",
+        "body": "Implements process_issues.py — reads data/issues.json and converts each issue into a human-readable text document ready for embedding.\r\n\r\nEach document includes:\r\n- id (issue number)\r\n- text (readable summary: title, author, state, date, labels, comment count)\r\n- metadata (number, author, state, created_at, labels)\r\n\r\nNote: returns an empty list currently since the repo has no issues yet — verified working correctly with no errors.",
+        "author": "Mourad-Fikry",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-09T02:16:16+00:00",
+        "merged_at": "2026-08-09T02:16:28+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            "src/process_issues.py"
+        ]
+    },
+    {
+        "number": 4,
+        "title": "Implement process_commits.py",
+        "body": "Implements process_commits.py — reads data/commits.json and converts each commit into a human-readable text document ready for embedding.\r\n\r\nEach document includes:\r\n- id (short commit SHA)\r\n- text (readable summary: author, date, message, files changed)\r\n- metadata (full SHA, author, date, files_changed)",
+        "author": "Mourad-Fikry",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-09T02:13:45+00:00",
+        "merged_at": "2026-08-09T02:13:56+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            "src/process_commits.py"
+        ]
+    },
+    {
+        "number": 3,
+        "title": "Implement fetch_docs.py",
+        "body": "Implements fetch_docs.py — walks the repo tree and pulls the content of all markdown (.md) files, saves them to data/docs.json.\r\n\r\nExtracted fields: filename, path, content.",
+        "author": "Mourad-Fikry",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-09T01:54:39+00:00",
+        "merged_at": "2026-08-09T01:59:55+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            "src/fetch_docs.py"
+        ]
+    },
+    {
+        "number": 2,
+        "title": "Implement fetch_pull_requests.py",
+        "body": "Implements fetch_pull_requests.py — pulls all pull requests (open, closed, merged) from the repo and saves them to data/pull_requests.json.\r\n\r\nExtracted fields: number, title, body, author, state, merged status, created_at, merged_at, linked_issues, files_changed.",
+        "author": "Mourad-Fikry",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-09T01:52:22+00:00",
+        "merged_at": "2026-08-09T02:01:16+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            "src/fetch_pull_requests.py"
+        ]
+    },
+    {
+        "number": 1,
+        "title": "Implement fetch_issues.py",
+        "body": "Implement fetch_issues.py - pulls all issues from the repo and saves them to data/issues.json\"",
+        "author": "Mourad-Fikry",
+        "state": "closed",
+        "merged": true,
+        "created_at": "2026-08-09T01:47:28+00:00",
+        "merged_at": "2026-08-09T02:00:46+00:00",
+        "linked_issues": [],
+        "files_changed": [
+            "src/fetch_issues.py"
+        ]
+    }
+]

@@ -1,44 +1,34 @@
 import json
 
+from src.config import DATA_DIR
 
-def process_issues(path="data/issues.json"):
-    """
-    Reads the raw issues JSON and converts each issue into a
-    human-readable text document with metadata, ready for embedding.
-    """
+
+def process_issues(path=DATA_DIR / "issues.json"):
     with open(path, "r", encoding="utf-8") as f:
         issues = json.load(f)
 
     documents = []
-
     for issue in issues:
         number = issue["number"]
-        title = issue["title"]
-        author = issue["author"] or "an unknown author"
-        state = issue["state"]
-        created_at = issue["created_at"] or "an unknown date"
-        labels = issue["labels"]
-        comments = issue["comments"]
-
+        title = issue.get("title") or "Untitled issue"
+        author = issue.get("author") or "unknown author"
+        state = issue.get("state") or "unknown"
+        created_at = issue.get("created_at") or "unknown date"
+        labels = issue.get("labels") or []
+        comments = issue.get("comments", 0)
         labels_text = f" Labels: {', '.join(labels)}." if labels else ""
 
-        text = (
-            f"Issue #{number} \"{title}\" was opened by {author} on {created_at} "
-            f"and is currently {state}.{labels_text} It has {comments} comment(s)."
-        )
-
-        document = {
+        documents.append({
             "id": f"issue_{number}",
             "type": "issue",
-            "text": text,
+            "text": f'Issue #{number} "{title}" was opened by {author} on {created_at} and is currently {state}.{labels_text} It has {comments} comment(s).',
             "metadata": {
                 "number": number,
+                "title": title,
                 "author": author,
                 "state": state,
-                "created_at": created_at,
-                "labels": labels
-            }
-        }
-        documents.append(document)
-
+                "date": created_at,
+                "labels": labels,
+            },
+        })
     return documents
