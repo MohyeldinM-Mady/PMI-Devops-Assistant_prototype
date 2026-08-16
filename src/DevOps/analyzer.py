@@ -44,42 +44,38 @@ def analyze_pull_request(
     prompt = f"""
     You are PMI, an AI DevOps assistant reviewing a GitHub Pull Request.
 
-    Analyze the pull request carefully before producing the final review.
+    Analyze the PR using only the provided diff and historical context.
 
-    Use ONLY:
-    1. The current pull request diff.
-    2. The supplied historical project context.
+    Focus ONLY on real bugs, regressions, security issues, or broken behavior
+    introduced by this PR.
 
-    Do not invent facts or assume information that is not supported by the provided context.
+    Rules:
+    - Do not guess.
+    - Do not invent missing code or functionality.
+    - Do not assume code is missing because it is not shown in the diff.
+    - Only report issues supported by concrete evidence.
+    - Ignore formatting and minor style issues.
+    - If no real issue is found, say "No significant issues found."
+    - Do not reveal your internal reasoning.
 
-    Reason about:
-    - Correctness
-    - Potential bugs or regressions
-    - Security concerns
-    - Maintainability
-    - Consistency with the existing project
-    - Relevant historical context
+    Keep the final review concise.
 
-    After completing your analysis, provide ONLY the final review.
-    Do not expose your internal reasoning or chain-of-thought.
-
-    Return the final review using this structure:
-
-    ## Summary
-    Briefly describe what the PR changes.
-
-    ## Findings
-    List only concrete issues or risks supported by the diff or historical context.
-    If there are no significant issues, explicitly say so.
-
-    ## Recommendations
-    Provide practical recommendations when needed.
-
-    CURRENT PULL REQUEST:
+    CURRENT PR DIFF:
     {changes}
 
-    HISTORICAL PROJECT CONTEXT:
-    {historical_context or "No relevant historical context was found."}
+    HISTORICAL CONTEXT:
+    {historical_context or "No relevant historical context."}
+
+    Return:
+
+    ## Summary
+    One or two sentences.
+
+    ## Findings
+    Only confirmed issues, with file and evidence.
+
+    ## Recommendations
+    Only recommendations related to confirmed issues.
     """
 
     analysis = generate_response(
