@@ -44,6 +44,9 @@ def generate_response(
 
     choice = response.choices[0]
 
+    print(f"finish_reason: {choice.finish_reason}")
+    print(f"usage: {getattr(response, 'usage', None)}")
+
     content = choice.message.content
 
     if not content:
