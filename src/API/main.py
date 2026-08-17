@@ -1,17 +1,17 @@
 import json
 from typing import Any
 
-from fastapi import FastAPI
+from src.API.Auth.router import router as auth_router
+from src.API.Auth.dependencies import get_current_user
+from src.API.Auth.models import User
+
+from fastapi import Depends, FastAPI
 from pydantic import BaseModel, Field
 
 from src.Reasoning.llm import generate_response
 from src.Retrieval.context import build_context
 from src.Retrieval.planner import plan_query
-from src.Retrieval.query import (
-    retrieve,
-    retrieve_all_changed_files,
-    retrieve_by_id,
-)
+from src.Retrieval.query import retrieve,retrieve_all_changed_files,retrieve_by_id
 
 
 app = FastAPI(
@@ -19,6 +19,8 @@ app = FastAPI(
     description="Project Memory Intelligence API",
     version="2.0.0",
 )
+
+app.include_router(auth_router)
 
 
 class ChatMessage(BaseModel):
@@ -264,7 +266,10 @@ USER QUESTION:
 
 
 @app.post("/chat", response_model=ChatResponse)
-def chat(request: ChatRequest):
+def chat(
+    request: ChatRequest,
+    current_user: User = Depends(get_current_user),
+):
     incoming_reference = request.active_reference.model_dump() if request.active_reference else None
     plan = plan_query(request.question, incoming_reference)
 

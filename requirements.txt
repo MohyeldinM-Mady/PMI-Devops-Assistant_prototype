@@ -9,3 +9,8 @@ fastapi
 uvicorn
 streamlit
 huggingface_hub
+
+SQLAlchemy==2.0.51
+PyJWT==2.13.0
+pwdlib[argon2]==0.3.0
+email-validator

@@ -26,7 +26,7 @@ def get_client():
 def generate_response(
     prompt: str,
     *,
-    max_tokens: int = 900,
+    max_tokens: int = 4096,
     temperature: float = 0.1,
 ) -> str:
 
