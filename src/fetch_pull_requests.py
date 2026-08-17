@@ -1,6 +1,7 @@
 import json
 import re
 
+from pathlib import Path
 from src.config import DATA_DIR, validate_github_config
 from src.github_client import get_repo
 
@@ -31,7 +32,7 @@ def fetch_pull_requests():
 
 
 def save_pull_requests(prs, path=DATA_DIR / "pull_requests.json"):
-    path = __import__("pathlib").Path(path)
+    path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(prs, f, indent=4, ensure_ascii=False)

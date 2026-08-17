@@ -1,7 +1,7 @@
 from src.Reasoning.llm import generate_response
 
 
-MAX_FILES = 30
+MAX_FILES = 50
 MAX_PATCH_PER_FILE = 2500
 MAX_TOTAL_PATCH = 30000
 
@@ -42,41 +42,37 @@ def analyze_pull_request(
     print(f"Historical context size: {len(historical_context or '')} characters")
 
     prompt = f"""
-    You are PMI, an AI DevOps assistant reviewing a GitHub Pull Request.
+You are PMI, an AI DevOps assistant reviewing a GitHub Pull Request.
 
-    Analyze the PR using only the provided diff and historical context.
+Analyze the current Pull Request using ONLY the provided information.
 
-    Focus ONLY on real bugs, regressions, security issues, or broken behavior
-    introduced by this PR.
+CURRENT PULL REQUEST:
+{changes}
 
-    Rules:
-    - Do not guess.
-    - Do not invent missing code or functionality.
-    - Do not assume code is missing because it is not shown in the diff.
-    - Only report issues supported by concrete evidence.
-    - Ignore formatting and minor style issues.
-    - If no real issue is found, say "No significant issues found."
-    - Do not reveal your internal reasoning.
+HISTORICAL PROJECT CONTEXT:
+{historical_context}
 
-    Keep the final review concise.
+Provide a concise review containing:
 
-    CURRENT PR DIFF:
-    {changes}
+1. Confirmed bugs, regressions, security issues, or broken behavior.
+2. Recommendations for confirmed issues.
+3. Relevant historical context when applicable.
 
-    HISTORICAL CONTEXT:
-    {historical_context or "No relevant historical context."}
+Rules:
+- Do not invent facts.
+- Do not report hypothetical or speculative issues.
+- Only report a finding when it is directly supported by the provided information.
+- Do not assume that code is missing just because it is not shown in the diff.
+- Do not treat an incomplete diff as evidence that a file is incomplete.
+- Ignore minor formatting or style issues.
+- If there are no confirmed issues, say "No significant issues found."
+- Do not reveal your internal reasoning.
+- Keep the final review concise.
 
-    Return:
+For every finding, include the file path and concrete evidence.
 
-    ## Summary
-    One or two sentences.
-
-    ## Findings
-    Only confirmed issues, with file and evidence.
-
-    ## Recommendations
-    Only recommendations related to confirmed issues.
-    """
+Return only the final review.
+"""
 
     analysis = generate_response(
         prompt,

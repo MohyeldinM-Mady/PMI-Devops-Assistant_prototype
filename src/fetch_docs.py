@@ -1,5 +1,6 @@
 import json
 
+from pathlib import Path
 from src.config import DATA_DIR, validate_github_config
 from src.github_client import get_repo
 
@@ -25,7 +26,7 @@ def fetch_docs():
 
 
 def save_docs(docs, path=DATA_DIR / "docs.json"):
-    path = __import__("pathlib").Path(path)
+    path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(docs, f, indent=4, ensure_ascii=False)
