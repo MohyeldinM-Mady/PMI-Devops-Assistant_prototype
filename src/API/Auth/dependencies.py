@@ -15,7 +15,9 @@ def get_current_user(
     db: Session = Depends(get_db),
 ) -> User:
     try:
-        user_id = decode_access_token(credentials.credentials)
+        user_id, token_version = decode_access_token(
+            credentials.credentials
+        )
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -29,6 +31,13 @@ def get_current_user(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    if token_version != user.token_version:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has been revoked.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

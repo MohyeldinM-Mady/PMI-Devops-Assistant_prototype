@@ -12,26 +12,21 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
 
     username: Mapped[str] = mapped_column(
-        String(50),
-        unique=True,
-        index=True,
-        nullable=False,
+        String(50), unique=True, index=True, nullable=False
     )
 
     email: Mapped[str] = mapped_column(
-        String(255),
-        unique=True,
-        index=True,
-        nullable=False,
+        String(255), unique=True, index=True, nullable=False
     )
 
     password_hash: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False,
+        String(255), nullable=False
+    )
+
+    token_version: Mapped[int] = mapped_column(
+        default=0, nullable=False
     )
 
     created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow,
-        nullable=False,
+        DateTime, default=datetime.utcnow, nullable=False
     )
