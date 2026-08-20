@@ -3,6 +3,7 @@
 
 import os
 import torch
+from functools import lru_cache
 
 from dotenv import load_dotenv
 from transformers import (
@@ -18,7 +19,6 @@ from huggingface_hub import snapshot_download
 # Configuration
 # ============================================================
 
-load_dotenv()
 
 HF_TOKEN = os.getenv("HF_TOKEN")
 

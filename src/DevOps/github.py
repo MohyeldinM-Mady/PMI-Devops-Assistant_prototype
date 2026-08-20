@@ -3,23 +3,24 @@ import os
 import requests
 
 
-def get_changed_files(
-    owner: str,
-    repo: str,
-    pr_number: int,
-) -> list[dict]:
+API_BASE = "https://api.github.com"
+
+
+def _headers():
     token = os.getenv("GITHUB_TOKEN")
-
-    url = f"https://api.github.com/repos/{owner}/{repo}/pulls/{pr_number}/files"
-
-    headers = {
+    if not token:
+        raise RuntimeError("GITHUB_TOKEN is not configured.")
+    return {
         "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
     }
 
-    response = requests.get(url, headers=headers)
-    response.raise_for_status()
 
+def get_changed_files(owner: str, repo: str, pr_number: int) -> list[dict]:
+    url = f"{API_BASE}/repos/{owner}/{repo}/pulls/{pr_number}/files"
+    response = requests.get(url, headers=_headers(), timeout=30)
+    response.raise_for_status()
     return [
         {
             "filename": file["filename"],
@@ -29,35 +30,13 @@ def get_changed_files(
         for file in response.json()
     ]
 
-def post_pr_comment(
-    owner: str,
-    repo: str,
-    pr_number: int,
-    body: str,
-) -> None:
-    token = os.getenv("GITHUB_TOKEN")
 
-    url = (
-        f"https://api.github.com/repos/"
-        f"{owner}/{repo}/issues/{pr_number}/comments"
-    )
-
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Accept": "application/vnd.github+json",
-    }
-
+def post_pr_comment(owner: str, repo: str, pr_number: int, body: str) -> None:
+    url = f"{API_BASE}/repos/{owner}/{repo}/issues/{pr_number}/comments"
     response = requests.post(
         url,
-        headers=headers,
+        headers=_headers(),
         json={"body": body},
+        timeout=30,
     )
-
-    if not response.ok:
-        print("=== GITHUB COMMENT ERROR ===")
-        print("STATUS:", response.status_code)
-        print("RESPONSE:", response.text)
-
     response.raise_for_status()
-
-    print("PMI analysis posted to PR successfully.")

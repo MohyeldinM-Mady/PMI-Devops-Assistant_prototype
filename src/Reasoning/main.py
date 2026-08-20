@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from src.Retrieval.query import retrieve_documents
 from src.Retrieval.context import build_context
 from src.Reasoning.llm import generate_response
+from src.Reasoning.prompt import build_prompt
+from src.Retrieval.main import retrieve_context
 
 
 app = FastAPI(
