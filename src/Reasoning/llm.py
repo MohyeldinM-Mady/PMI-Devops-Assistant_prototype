@@ -123,7 +123,7 @@ print("PMI adapter loaded successfully!")
 # Generation
 # ============================================================
 
-def generate_response(prompt):
+def generate_response(prompt,max_tokens=150):
     messages = [
         {
             "role": "system",
@@ -159,7 +159,7 @@ def generate_response(prompt):
     with torch.no_grad():
         outputs = model.generate(
             **inputs,
-            max_new_tokens=150,
+            max_new_tokens=max_tokens,
             do_sample=False,
             pad_token_id=tokenizer.pad_token_id,
         )

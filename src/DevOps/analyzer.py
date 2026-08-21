@@ -75,9 +75,7 @@ Return only the final review.
 """
 
     analysis = generate_response(
-        prompt,
-        max_tokens=4096,
-        temperature=0.1,
+        prompt,max_tokens=4096
     )
 
     print(f"Analysis length: {len(analysis or '')}")
