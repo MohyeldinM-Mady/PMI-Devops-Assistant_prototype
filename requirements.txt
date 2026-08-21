@@ -16,3 +16,4 @@ PyJWT==2.13.0
 pwdlib[argon2]==0.3.0
 email-validator
 streamlit-cookies-manager-v2
+
