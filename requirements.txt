@@ -4,6 +4,7 @@ requests==2.32.3
 sentence-transformers
 chromadb
 transformers
+peft
 fastapi
 uvicorn
 streamlit
