@@ -7,7 +7,6 @@ transformers
 peft
 pydantic
 bitsandbytes>=0.46.1
-AutoModelForCausalLM
 fastapi
 uvicorn
 streamlit
