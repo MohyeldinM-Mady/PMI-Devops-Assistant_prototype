@@ -1,20 +1,69 @@
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+from src.Retrieval.query import retrieve_documents
+from src.Retrieval.context import build_context
 from src.Reasoning.llm import generate_response
 from src.Reasoning.prompt import build_prompt
 from src.Retrieval.main import retrieve_context
 
 
-def answer_question(question: str, n_results: int = 3) -> str:
-    context = retrieve_context(question, n_results=n_results)
-    if not context:
-        return "I couldn't find relevant project context for that question."
-    return generate_response(build_prompt(question, context))
+app = FastAPI(
+    title="PMI API",
+    description="Project Memory Intelligence API",
+    version="1.0.0",
+)
 
 
-def main():
-    question = input("Ask a question: ").strip()
-    print("\nAnswer:\n")
-    print(answer_question(question))
+class ChatMessage(BaseModel):
+    role: str
+    content: str
 
 
-if __name__ == "__main__":
-    main()
+class ChatRequest(BaseModel):
+    question: str
+    history: list[ChatMessage] = []
+
+
+@app.post("/chat")
+def chat(request: ChatRequest):
+
+    results = retrieve_documents(
+        request.question,
+        n_results=3,
+    )
+
+    context = build_context(results)
+
+    conversation_history = "\n".join(
+        f"{message.role}: {message.content}"
+        for message in request.history
+    )
+
+    prompt = f"""
+You are PMI, an AI project assistant.
+
+Answer the user's question using only the provided project context.
+Do not invent project information.
+
+CONVERSATION HISTORY:
+{conversation_history}
+
+PROJECT CONTEXT:
+{context}
+
+USER QUESTION:
+{request.question}
+"""
+
+    answer = generate_response(prompt)
+
+    return {
+        "question": request.question,
+        "answer": answer,
+    }
+
+
+@app.get("/")
+def root():
+    return {"message": "PMI API is running"}
