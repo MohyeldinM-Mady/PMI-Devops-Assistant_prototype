@@ -1,9 +1,5 @@
-
-
-
 import os
 import torch
-from functools import lru_cache
 
 from dotenv import load_dotenv
 from transformers import (
@@ -19,6 +15,7 @@ from huggingface_hub import snapshot_download
 # Configuration
 # ============================================================
 
+load_dotenv()
 
 HF_TOKEN = os.getenv("HF_TOKEN")
 
@@ -30,6 +27,8 @@ if not HF_TOKEN:
 
 BASE_MODEL = "Qwen/Qwen2.5-3B-Instruct"
 ADAPTER_PATH = "baherrr/pmi-qwen-3b"
+
+MAX_INPUT_TOKENS = 1024
 
 
 # ============================================================
@@ -71,7 +70,7 @@ if tokenizer.pad_token is None:
 
 
 # ============================================================
-# Base Qwen model
+# Base model
 # ============================================================
 
 print("\nLoading Qwen 2.5 3B...")
@@ -88,7 +87,7 @@ print("Base model loaded.")
 
 
 # ============================================================
-# Download PMI LoRA adapter locally
+# Download PMI LoRA adapter
 # ============================================================
 
 print("\nLoading PMI fine-tuned adapter...")
@@ -105,7 +104,7 @@ print(adapter_local_path)
 
 
 # ============================================================
-# Load PMI LoRA adapter
+# Load LoRA adapter
 # ============================================================
 
 model = PeftModel.from_pretrained(
@@ -123,10 +122,7 @@ print("PMI adapter loaded successfully!")
 # Generation
 # ============================================================
 
-MAX_INPUT_TOKENS = 2048
-
-
-def generate_response(prompt, max_tokens=100):
+def generate_response(prompt, max_tokens=50):
 
     print(">>> generate_response START", flush=True)
 
@@ -134,9 +130,9 @@ def generate_response(prompt, max_tokens=100):
         {
             "role": "system",
             "content": (
-                "You are PMI, an AI project assistant. "
-                "Answer using only the provided project context. "
-                "Do not invent project information."
+                "You are PMI, an AI DevOps assistant. "
+                "Return only a concise final review. "
+                "Never reproduce the input code or patch."
             ),
         },
         {
@@ -155,18 +151,27 @@ def generate_response(prompt, max_tokens=100):
 
     print(">>> Tokenizing", flush=True)
 
+    # IMPORTANT:
+    # The prompt must already be small enough.
+    # Do not silently truncate the end of the instructions.
     inputs = tokenizer(
         text,
         return_tensors="pt",
-        truncation=True,
-        max_length=MAX_INPUT_TOKENS,
+        truncation=False,
     )
 
+    input_token_count = inputs["input_ids"].shape[1]
+
     print(
-        f">>> Input tokens after limit: "
-        f"{inputs['input_ids'].shape[1]}",
+        f">>> Input tokens: {input_token_count}",
         flush=True,
     )
+
+    if input_token_count > MAX_INPUT_TOKENS:
+        raise ValueError(
+            f"Prompt is too large: {input_token_count} tokens "
+            f"(max allowed: {MAX_INPUT_TOKENS})"
+        )
 
     print(
         f">>> Model device: {model.device}",
@@ -185,8 +190,10 @@ def generate_response(prompt, max_tokens=100):
             **inputs,
             max_new_tokens=max_tokens,
             do_sample=False,
-            pad_token_id=tokenizer.pad_token_id,
             use_cache=True,
+            pad_token_id=tokenizer.pad_token_id,
+            eos_token_id=tokenizer.eos_token_id,
+            repetition_penalty=1.05,
         )
 
     print(">>> model.generate() FINISHED", flush=True)
@@ -200,6 +207,8 @@ def generate_response(prompt, max_tokens=100):
         skip_special_tokens=True,
     )
 
-    print(">>> Response decoded", flush=True)
+    print(">>> RAW MODEL RESPONSE:", flush=True)
+    print(repr(response), flush=True)
+    print(">>> END RAW MODEL RESPONSE", flush=True)
 
     return response.strip()

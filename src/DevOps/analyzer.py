@@ -1,10 +1,10 @@
 from src.Reasoning.llm import generate_response
 
 
-MAX_FILES = 30
-MAX_PATCH_PER_FILE = 1000
-MAX_TOTAL_PATCH = 7000
-MAX_HISTORICAL_CONTEXT = 3000
+MAX_FILES = 10
+MAX_PATCH_PER_FILE = 250
+MAX_TOTAL_PATCH = 2500
+MAX_HISTORICAL_CONTEXT = 500
 
 
 def _build_changes(files: list[dict]) -> str:
@@ -12,6 +12,7 @@ def _build_changes(files: list[dict]) -> str:
     total_chars = 0
 
     for file in files[:MAX_FILES]:
+
         filename = file.get("filename", "unknown")
         status = file.get("status", "unknown")
         patch = file.get("patch") or ""
@@ -22,6 +23,7 @@ def _build_changes(files: list[dict]) -> str:
             break
 
         patch = patch[:min(MAX_PATCH_PER_FILE, remaining)]
+
         total_chars += len(patch)
 
         changes.append(
@@ -41,7 +43,9 @@ def analyze_pull_request(
     print(">>> analyze_pull_request: START", flush=True)
 
     print(">>> Starting _build_changes", flush=True)
+
     changes = _build_changes(files)
+
     print(">>> Finished _build_changes", flush=True)
 
     historical_context = (
@@ -52,52 +56,59 @@ def analyze_pull_request(
         f"Files analyzed: {min(len(files), MAX_FILES)}",
         flush=True,
     )
+
     print(
         f"Current diff size: {len(changes)} characters",
         flush=True,
     )
+
     print(
         f"Historical context size: {len(historical_context)} characters",
         flush=True,
     )
 
     prompt = f"""
-You are PMI, an AI DevOps assistant reviewing a GitHub Pull Request.
+    Review this GitHub Pull Request.
 
-Analyze the current Pull Request using ONLY the provided information.
+    IMPORTANT OUTPUT RULES:
+    - Return ONLY the final PR review.
+    - Never reproduce, quote, or continue the patch.
+    - Never output raw diff markers such as "+", "-", "@@", "Patch:", or "Status:".
+    - Do not invent facts.
+    - Report only confirmed issues directly supported by the provided information.
+    - Ignore minor formatting and style issues.
+    - Do not assume missing code from an incomplete diff.
 
-CURRENT PULL REQUEST:
-{changes}
+    If there are no confirmed issues, return exactly:
 
-HISTORICAL PROJECT CONTEXT:
-{historical_context}
+    No significant issues found.
 
-Provide a concise review containing:
+    Otherwise use this format:
 
-1. Confirmed bugs, regressions, security issues, or broken behavior.
-2. Recommendations for confirmed issues.
-3. Relevant historical context when applicable.
+    ### Finding
+    - File: <file path>
+    - Issue: <confirmed issue>
+    - Evidence: <concrete evidence>
+    - Recommendation: <specific recommendation>
 
-Rules:
-- Do not invent facts.
-- Do not report hypothetical or speculative issues.
-- Only report a finding when it is directly supported by the provided information.
-- Do not assume that code is missing just because it is not shown in the diff.
-- Do not treat an incomplete diff as evidence that a file is incomplete.
-- Ignore minor formatting or style issues.
-- If there are no confirmed issues, say "No significant issues found."
-- Do not reveal your internal reasoning.
-- Keep the final review concise.
-- For every finding, include the file path and concrete evidence.
+    CURRENT CHANGES:
+    {changes}
 
-Return only the final review.
-"""
+    RELEVANT HISTORICAL CONTEXT:
+    {historical_context}
+
+    Return the final review only.
+    """
 
     print(">>> Calling generate_response", flush=True)
 
-    analysis = generate_response(prompt)
+    analysis = generate_response(
+        prompt,
+        max_tokens=80,
+    )
 
     print(">>> generate_response returned", flush=True)
+
     print(
         f"Analysis length: {len(analysis or '')}",
         flush=True,
