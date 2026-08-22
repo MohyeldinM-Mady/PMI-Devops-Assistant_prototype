@@ -123,7 +123,11 @@ print("PMI adapter loaded successfully!")
 # Generation
 # ============================================================
 
+MAX_INPUT_TOKENS = 4096
+
+
 def generate_response(prompt, max_tokens=150):
+
     print(">>> generate_response START", flush=True)
 
     messages = [
@@ -131,8 +135,8 @@ def generate_response(prompt, max_tokens=150):
             "role": "system",
             "content": (
                 "You are PMI, an AI project assistant. "
-                "Answer the user's question using only the provided "
-                "project context. Do not invent project information."
+                "Answer using only the provided project context. "
+                "Do not invent project information."
             ),
         },
         {
@@ -154,15 +158,20 @@ def generate_response(prompt, max_tokens=150):
     inputs = tokenizer(
         text,
         return_tensors="pt",
+        truncation=True,
+        max_length=MAX_INPUT_TOKENS,
     )
 
     print(
-        f">>> Tokenization finished. Tokens: {inputs['input_ids'].shape[1]}",
+        f">>> Input tokens after limit: "
+        f"{inputs['input_ids'].shape[1]}",
         flush=True,
     )
 
-    print(f">>> Model device: {model.device}", flush=True)
-    print(">>> Moving inputs to device", flush=True)
+    print(
+        f">>> Model device: {model.device}",
+        flush=True,
+    )
 
     inputs = {
         key: value.to(model.device)
@@ -171,18 +180,23 @@ def generate_response(prompt, max_tokens=150):
 
     print(">>> Starting model.generate()", flush=True)
 
-    with torch.no_grad():
+    with torch.inference_mode():
         outputs = model.generate(
             **inputs,
             max_new_tokens=max_tokens,
             do_sample=False,
             pad_token_id=tokenizer.pad_token_id,
+            use_cache=True,
         )
 
     print(">>> model.generate() FINISHED", flush=True)
 
+    generated_tokens = outputs[0][
+        inputs["input_ids"].shape[1]:
+    ]
+
     response = tokenizer.decode(
-        outputs[0][inputs["input_ids"].shape[1]:],
+        generated_tokens,
         skip_special_tokens=True,
     )
 
