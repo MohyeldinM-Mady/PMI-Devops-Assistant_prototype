@@ -123,7 +123,9 @@ print("PMI adapter loaded successfully!")
 # Generation
 # ============================================================
 
-def generate_response(prompt,max_tokens=150):
+def generate_response(prompt, max_tokens=150):
+    print(">>> generate_response START", flush=True)
+
     messages = [
         {
             "role": "system",
@@ -139,22 +141,35 @@ def generate_response(prompt,max_tokens=150):
         },
     ]
 
+    print(">>> Applying chat template", flush=True)
+
     text = tokenizer.apply_chat_template(
         messages,
         tokenize=False,
         add_generation_prompt=True,
     )
 
+    print(">>> Tokenizing", flush=True)
+
     inputs = tokenizer(
         text,
         return_tensors="pt",
     )
 
-    # Put inputs on the same device as the model
+    print(
+        f">>> Tokenization finished. Tokens: {inputs['input_ids'].shape[1]}",
+        flush=True,
+    )
+
+    print(f">>> Model device: {model.device}", flush=True)
+    print(">>> Moving inputs to device", flush=True)
+
     inputs = {
         key: value.to(model.device)
         for key, value in inputs.items()
     }
+
+    print(">>> Starting model.generate()", flush=True)
 
     with torch.no_grad():
         outputs = model.generate(
@@ -164,9 +179,13 @@ def generate_response(prompt,max_tokens=150):
             pad_token_id=tokenizer.pad_token_id,
         )
 
+    print(">>> model.generate() FINISHED", flush=True)
+
     response = tokenizer.decode(
         outputs[0][inputs["input_ids"].shape[1]:],
         skip_special_tokens=True,
     )
+
+    print(">>> Response decoded", flush=True)
 
     return response.strip()
