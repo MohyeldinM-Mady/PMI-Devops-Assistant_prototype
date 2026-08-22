@@ -1,10 +1,10 @@
 from src.Reasoning.llm import generate_response
 
 
-MAX_FILES = 10
-MAX_PATCH_PER_FILE = 250
-MAX_TOTAL_PATCH = 2500
-MAX_HISTORICAL_CONTEXT = 500
+MAX_FILES = 20
+MAX_PATCH_PER_FILE = 700
+MAX_TOTAL_PATCH = 5000
+MAX_HISTORICAL_CONTEXT = 2000
 
 
 def _build_changes(files: list[dict]) -> str:
