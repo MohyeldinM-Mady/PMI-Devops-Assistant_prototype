@@ -165,7 +165,6 @@ def generate_response(prompt, max_tokens=50,temperature=0.1):
             **inputs,
             max_new_tokens=max_tokens,
             temperature=temperature,
-            temperature=temperature,
             do_sample=False,
             pad_token_id=tokenizer.pad_token_id,
         )
