@@ -35,11 +35,24 @@ def analyze_pull_request(
     files: list[dict],
     historical_context: str,
 ) -> str:
-    changes = _build_changes(files)
+    print(">>> analyze_pull_request: START", flush=True)
 
-    print(f"Files analyzed: {min(len(files), MAX_FILES)}")
-    print(f"Current diff size: {len(changes)} characters")
-    print(f"Historical context size: {len(historical_context or '')} characters")
+    print(">>> Starting _build_changes", flush=True)
+    changes = _build_changes(files)
+    print(">>> Finished _build_changes", flush=True)
+
+    print(
+        f"Files analyzed: {min(len(files), MAX_FILES)}",
+        flush=True
+    )
+    print(
+        f"Current diff size: {len(changes)} characters",
+        flush=True
+    )
+    print(
+        f"Historical context size: {len(historical_context or '')}",
+        flush=True
+    )
 
     prompt = f"""
 You are PMI, an AI DevOps assistant reviewing a GitHub Pull Request.
@@ -73,11 +86,11 @@ For every finding, include the file path and concrete evidence.
 
 Return only the final review.
 """
-
+    print(">>> Calling generate_response", flush=True)
     analysis = generate_response(
         prompt
     )
-
-    print(f"Analysis length: {len(analysis or '')}")
+    print(">>> generate_response returned", flush=True)
+    print(f"Analysis length: {len(analysis or '')}", flush=True)
 
     return analysis.strip()
