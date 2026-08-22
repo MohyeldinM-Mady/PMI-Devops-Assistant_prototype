@@ -1,3 +1,6 @@
+
+
+
 import os
 import torch
 
@@ -7,6 +10,7 @@ from transformers import (
     AutoModelForCausalLM,
     BitsAndBytesConfig,
 )
+
 from peft import PeftModel
 from huggingface_hub import snapshot_download
 
@@ -27,8 +31,6 @@ if not HF_TOKEN:
 
 BASE_MODEL = "Qwen/Qwen2.5-3B-Instruct"
 ADAPTER_PATH = "baherrr/pmi-qwen-3b"
-
-MAX_INPUT_TOKENS = 512
 
 
 # ============================================================
@@ -70,7 +72,7 @@ if tokenizer.pad_token is None:
 
 
 # ============================================================
-# Base model
+# Base Qwen model
 # ============================================================
 
 print("\nLoading Qwen 2.5 3B...")
@@ -87,7 +89,7 @@ print("Base model loaded.")
 
 
 # ============================================================
-# Download PMI LoRA adapter
+# Download PMI LoRA adapter locally
 # ============================================================
 
 print("\nLoading PMI fine-tuned adapter...")
@@ -104,7 +106,7 @@ print(adapter_local_path)
 
 
 # ============================================================
-# Load LoRA adapter
+# Load PMI LoRA adapter
 # ============================================================
 
 model = PeftModel.from_pretrained(
@@ -122,17 +124,15 @@ print("PMI adapter loaded successfully!")
 # Generation
 # ============================================================
 
-def generate_response(prompt, max_tokens=50):
-
-    print(">>> generate_response START", flush=True)
-
+def generate_response(prompt ,  max_tokens=900,
+                temperature=0.1,):
     messages = [
         {
             "role": "system",
             "content": (
-                "You are PMI, an AI DevOps assistant. "
-                "Return only a concise final review. "
-                "Never reproduce the input code or patch."
+                "You are PMI, an AI project assistant. "
+                "Answer the user's question using only the provided "
+                "project context. Do not invent project information."
             ),
         },
         {
@@ -141,74 +141,35 @@ def generate_response(prompt, max_tokens=50):
         },
     ]
 
-    print(">>> Applying chat template", flush=True)
-
     text = tokenizer.apply_chat_template(
         messages,
         tokenize=False,
         add_generation_prompt=True,
     )
 
-    print(">>> Tokenizing", flush=True)
-
-    # IMPORTANT:
-    # The prompt must already be small enough.
-    # Do not silently truncate the end of the instructions.
     inputs = tokenizer(
         text,
         return_tensors="pt",
-        truncation=False,
     )
 
-    input_token_count = inputs["input_ids"].shape[1]
-
-    print(
-        f">>> Input tokens: {input_token_count}",
-        flush=True,
-    )
-
-    if input_token_count > MAX_INPUT_TOKENS:
-        raise ValueError(
-            f"Prompt is too large: {input_token_count} tokens "
-            f"(max allowed: {MAX_INPUT_TOKENS})"
-        )
-
-    print(
-        f">>> Model device: {model.device}",
-        flush=True,
-    )
-
+    # Put inputs on the same device as the model
     inputs = {
         key: value.to(model.device)
         for key, value in inputs.items()
     }
 
-    print(">>> Starting model.generate()", flush=True)
-
-    with torch.inference_mode():
+    with torch.no_grad():
         outputs = model.generate(
             **inputs,
             max_new_tokens=max_tokens,
+            temperature=temperature,
             do_sample=False,
-            use_cache=True,
             pad_token_id=tokenizer.pad_token_id,
-            eos_token_id=tokenizer.eos_token_id,
-            repetition_penalty=1.05,
         )
 
-    print(">>> model.generate() FINISHED", flush=True)
-
-    generated_tokens = outputs[0][
-        inputs["input_ids"].shape[1]:
-    ]
-
     response = tokenizer.decode(
-        generated_tokens,
+        outputs[0][inputs["input_ids"].shape[1]:],
         skip_special_tokens=True,
     )
-
-    print(">>> RAW MODEL RESPONSE:", flush=True)
-    print(repr(response), flush=True)
-    print(">>> END RAW MODEL RESPONSE", flush=True)
 
     return response.strip()
