@@ -123,10 +123,10 @@ print("PMI adapter loaded successfully!")
 # Generation
 # ============================================================
 
-MAX_INPUT_TOKENS = 4096
+MAX_INPUT_TOKENS = 2048
 
 
-def generate_response(prompt, max_tokens=150):
+def generate_response(prompt, max_tokens=100):
 
     print(">>> generate_response START", flush=True)
 

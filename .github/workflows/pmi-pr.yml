@@ -26,6 +26,14 @@ jobs:
           uv pip install torch==2.11.0+cpu torchvision==0.26.0+cpu --index-url https://download.pytorch.org/whl/cpu
           uv pip install -r requirements.txt --index-url https://pypi.org/simple
 
+      - name: Cache Hugging Face models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: huggingface-qwen25-3b-pmi-v1
+          restore-keys: |
+            huggingface-qwen25-3b-pmi-
+
       - name: Collect project data
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -50,7 +58,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          LLM_MODEL: openai/gpt-oss-20b:groq
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-         uv run python -m src.DevOps.main
+          uv run python -m src.DevOps.main
