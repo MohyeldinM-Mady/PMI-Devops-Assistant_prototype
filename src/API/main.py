@@ -1,17 +1,23 @@
 import json
 from typing import Any
 
+from fastapi import Depends, FastAPI
+from pydantic import BaseModel, Field
+
 from src.API.Auth.router import router as auth_router
 from src.API.Auth.dependencies import get_current_user
 from src.API.Auth.models import User
-
-from fastapi import Depends, FastAPI
-from pydantic import BaseModel, Field
+from src.API.database import Base, engine
+from src.Database.chat_models import ChatSession, ChatMessage
 
 from src.Reasoning.llm import generate_response
 from src.Retrieval.context import build_context
 from src.Retrieval.planner import plan_query
-from src.Retrieval.query import retrieve,retrieve_all_changed_files,retrieve_by_id
+from src.Retrieval.query import (
+    retrieve,
+    retrieve_all_changed_files,
+    retrieve_by_id,
+)
 
 
 app = FastAPI(
@@ -19,6 +25,11 @@ app = FastAPI(
     description="Project Memory Intelligence API",
     version="2.0.0",
 )
+
+@app.on_event("startup")
+def create_tables():
+    Base.metadata.create_all(bind=engine)
+
 
 app.include_router(auth_router)
 
