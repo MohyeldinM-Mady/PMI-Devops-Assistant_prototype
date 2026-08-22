@@ -28,7 +28,7 @@ if not HF_TOKEN:
 BASE_MODEL = "Qwen/Qwen2.5-3B-Instruct"
 ADAPTER_PATH = "baherrr/pmi-qwen-3b"
 
-MAX_INPUT_TOKENS = 1024
+MAX_INPUT_TOKENS = 512
 
 
 # ============================================================
