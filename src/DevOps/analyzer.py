@@ -1,10 +1,10 @@
 from src.Reasoning.llm import generate_response
 
 
-MAX_FILES = 20
-MAX_PATCH_PER_FILE = 700
-MAX_TOTAL_PATCH = 5000
-MAX_HISTORICAL_CONTEXT = 2000
+MAX_FILES = 10
+MAX_PATCH_PER_FILE = 400
+MAX_TOTAL_PATCH = 3000
+MAX_HISTORICAL_CONTEXT = 1000
 
 
 def _build_changes(files: list[dict]) -> str:
@@ -68,36 +68,24 @@ def analyze_pull_request(
     )
 
     prompt = f"""
-    Review this GitHub Pull Request.
+    Review this GitHub Pull Request using only the provided information.
 
-    IMPORTANT OUTPUT RULES:
-    - Return ONLY the final PR review.
-    - Never reproduce, quote, or continue the patch.
-    - Never output raw diff markers such as "+", "-", "@@", "Patch:", or "Status:".
-    - Do not invent facts.
-    - Report only confirmed issues directly supported by the provided information.
-    - Ignore minor formatting and style issues.
-    - Do not assume missing code from an incomplete diff.
-
-    If there are no confirmed issues, return exactly:
-
-    No significant issues found.
-
-    Otherwise use this format:
-
-    ### Finding
-    - File: <file path>
-    - Issue: <confirmed issue>
-    - Evidence: <concrete evidence>
-    - Recommendation: <specific recommendation>
-
-    CURRENT CHANGES:
+    CURRENT PR:
     {changes}
 
-    RELEVANT HISTORICAL CONTEXT:
+    PROJECT CONTEXT:
     {historical_context}
 
-    Return the final review only.
+    Report only confirmed bugs, regressions, security issues, or broken behavior.
+
+    Rules:
+    - Do not invent facts or speculate.
+    - Ignore style issues.
+    - Include file path and evidence for each finding.
+    - If no confirmed issues exist, say exactly:
+    No significant issues found.
+
+    Return only the concise final review.
     """
 
     print(">>> Calling generate_response", flush=True)
