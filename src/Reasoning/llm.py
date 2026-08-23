@@ -56,7 +56,7 @@ Do not explain how you arrived at the answer.
 def generate_response(
     prompt: str,
     *,
-    max_tokens: int = 1500,
+    max_tokens: int = 900,
     temperature: float = 0.1,
 ) -> str:
 
@@ -88,13 +88,6 @@ def generate_response(
     )
 
     content = choice.message.content
-
-    if content and "Here's a thinking process:" in content:
-        print(
-            "WARNING: Model returned reasoning instead of a final answer.",
-            flush=True,
-        )
-        return ""
 
     if not content:
         print(
