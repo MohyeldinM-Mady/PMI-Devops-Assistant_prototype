@@ -10,7 +10,7 @@ load_dotenv()
 
 MODEL_NAME = os.getenv(
     "LLM_MODEL",
-    "qwen/qwen3-next-80b-a3b-instruct:free",
+    "openrouter/free",
 )
 
 
@@ -56,7 +56,7 @@ Do not explain how you arrived at the answer.
 def generate_response(
     prompt: str,
     *,
-    max_tokens: int = 2500,
+    max_tokens: int = 1500,
     temperature: float = 0.1,
 ) -> str:
 
