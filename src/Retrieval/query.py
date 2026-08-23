@@ -16,17 +16,58 @@ ENTITY_ID_PREFIX = {
 }
 
 
-def canonical_document_id(entity: str, identifier: str) -> str | None:
+def retrieve_boundary(
+    entity: str,
+    operation: str,
+):
+    results = retrieve_by_type(entity)
+
+    ids = results.get("ids", [[]])[0]
+    documents = results.get("documents", [[]])[0]
+    metadatas = results.get("metadatas", [[]])[0]
+
+    records = list(zip(ids, documents, metadatas))
+
+    if not records:
+        return _build_result([])
+
+    records = _sort_records(records, entity)
+
+    if operation == "first":
+        selected = records[0]
+
+    elif operation == "last":
+        selected = records[-1]
+
+    else:
+        return _build_result([])
+
+    return _build_result([selected])
+
+
+def canonical_document_id(
+    entity: str,
+    identifier: str,
+) -> str | None:
     if identifier is None:
         return None
-    identifier = str(identifier)
+
+    identifier = str(identifier).strip().lower()
+
     prefix = ENTITY_ID_PREFIX.get(entity)
+
     if not prefix:
         return None
+
     if entity == "doc":
+        if identifier == "readme":
+            identifier = "readme.md"
+
         return f"doc_{identifier.replace('.', '_')}"
+
     if entity == "commit":
         return f"commit_{identifier[:7]}"
+
     return f"{prefix}_{identifier}"
 
 
@@ -268,27 +309,60 @@ def retrieve_relative(entity: str, identifier: str, relation: str):
     return _build_result([records[target_index]])
 
 
-def retrieve(entity: str, operation: str, identifier: str | None = None,
-             query: str | None = None, n_results: int = 5):
+def retrieve(
+    entity: str,
+    operation: str,
+    identifier: str | None = None,
+    query: str | None = None,
+    n_results: int = 5,
+):
     if operation == "get":
-        document_id = canonical_document_id(entity, identifier) if identifier else None
-        return retrieve_by_id(document_id) if document_id else _build_result([])
+        document_id = (
+            canonical_document_id(entity, identifier)
+            if identifier
+            else None
+        )
+        return (
+            retrieve_by_id(document_id)
+            if document_id
+            else _build_result([])
+        )
 
     if operation == "list":
         return retrieve_by_type(entity)
 
     if operation == "search":
-        return retrieve_documents(query or "", n_results=n_results)
+        return retrieve_documents(
+            query or "",
+            n_results=n_results,
+        )
 
     if operation in {"previous", "next"}:
-        return retrieve_relative(entity, identifier, operation)
+        return retrieve_relative(
+            entity,
+            identifier,
+            operation,
+        )
+
+    if operation in {"first", "last"}:
+        return retrieve_boundary(entity, operation)
 
     if operation == "list_files":
         files = retrieve_all_changed_files()
+
         return {
-            "ids": [[f"file_{index}" for index, _ in enumerate(files)]],
+            "ids": [[
+                f"file_{index}"
+                for index, _ in enumerate(files)
+            ]],
             "documents": [[file] for file in files],
-            "metadatas": [[{"type": "file", "path": file}] for file in files],
+            "metadatas": [[
+                {
+                    "type": "file",
+                    "path": file,
+                }
+                for file in files
+            ]],
         }
 
     return _build_result([])

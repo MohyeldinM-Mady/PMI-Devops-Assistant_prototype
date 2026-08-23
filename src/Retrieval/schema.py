@@ -10,6 +10,8 @@ Operation = Literal[
     "search",
     "previous",
     "next",
+    "first",
+    "last",
     "list_files",
 ]
 
