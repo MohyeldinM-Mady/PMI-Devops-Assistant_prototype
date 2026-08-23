@@ -47,10 +47,10 @@ jobs:
           uv run python -m src.VectorDB.main 
  
       - name: Run PMI 
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-          HF_TOKEN: ${{ secrets.HF_TOKEN }} 
-          LLM_MODEL: openai/gpt-oss-20b:groq 
-          PR_NUMBER: ${{ github.event.pull_request.number }} 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          LLM_MODEL: openrouter/free
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: | 
          uv run python -m src.DevOps.main
