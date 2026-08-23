@@ -91,8 +91,7 @@ def analyze_pull_request(
     print(">>> Calling generate_response", flush=True)
 
     analysis = generate_response(
-        prompt,
-        max_tokens=80,
+        prompt
     )
 
     print(">>> generate_response returned", flush=True)

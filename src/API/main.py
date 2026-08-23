@@ -327,9 +327,7 @@ def chat(
             answer = "I couldn't find relevant project context for that question."
         else:
             answer = generate_response(
-                build_reasoning_prompt(request.question, context),
-                max_tokens=900,
-                temperature=0.1,
+                build_reasoning_prompt(request.question, context)
             )
         next_reference = None
 

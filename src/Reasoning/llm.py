@@ -124,7 +124,7 @@ print("PMI adapter loaded successfully!")
 # Generation
 # ============================================================
 
-def generate_response(prompt, max_tokens=50,temperature=0.1):
+def generate_response(prompt, max_tokens=50):
 
     print(">>> generate_response START", flush=True)
 
@@ -164,7 +164,6 @@ def generate_response(prompt, max_tokens=50,temperature=0.1):
         outputs = model.generate(
             **inputs,
             max_new_tokens=max_tokens,
-            temperature=temperature,
             do_sample=False,
             pad_token_id=tokenizer.pad_token_id,
         )
