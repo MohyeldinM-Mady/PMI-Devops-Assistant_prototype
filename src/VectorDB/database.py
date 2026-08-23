@@ -20,3 +20,4 @@ def reset_collection():
     except Exception:
         pass
     return client.get_or_create_collection(name=COLLECTION_NAME)
+
