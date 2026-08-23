@@ -68,68 +68,24 @@ def analyze_pull_request(
     )
 
     prompt = f"""
-    You are reviewing a GitHub Pull Request.
+    Review this GitHub Pull Request using only the provided information.
 
-    Review ONLY the provided pull request changes and project context.
-
-    IMPORTANT:
-    - Return ONLY the final PR review.
-    - Do NOT explain your reasoning or thinking process.
-    - Do NOT describe how you analyzed the pull request.
-    - Do NOT summarize every changed file.
-    - Do NOT repeat the pull request contents.
-    - Do NOT speculate or make assumptions.
-    - Do NOT use phrases such as:
-    "Let's examine"
-    "We are given"
-    "We need to"
-    "I should"
-    "Let's look at"
-    "We can assume"
-    "However, we need to check"
-
-    Report ONLY confirmed bugs, regressions, security issues,
-    or broken behavior directly supported by the provided information.
-
-    A finding must:
-    - Be a confirmed issue.
-    - Have explicit evidence in the PR changes or project context.
-    - Include the affected file path.
-
-    Do NOT report:
-    - Style issues.
-    - Code quality suggestions.
-    - Potential issues without evidence.
-    - Hypothetical problems.
-    - Dependency concerns unless a concrete breakage is shown.
-    - Missing information as an issue.
-    - Documentation changes unless they cause broken behavior.
-
-    OUTPUT RULES:
-
-    If there are no confirmed issues, output EXACTLY:
-
-    No significant issues found.
-
-    Otherwise, use this format for every finding:
-
-    ### [Severity] Short title
-
-    **File:** `path/to/file`
-
-    **Issue:** Describe the confirmed problem.
-
-    **Evidence:** State the specific code or change that proves it.
-
-    **Impact:** Describe the resulting broken behavior or security risk.
-
-    Do not output anything before or after the final review.
-
-    CURRENT PULL REQUEST CHANGES:
+    CURRENT PR:
     {changes}
 
     PROJECT CONTEXT:
     {historical_context}
+
+    Report only confirmed bugs, regressions, security issues, or broken behavior.
+
+    Rules:
+    - Do not invent facts or speculate.
+    - Ignore style issues.
+    - Include file path and evidence for each finding.
+    - If no confirmed issues exist, say exactly:
+    No significant issues found.
+
+    Return only the concise final review.
     """
 
     print(">>> Calling generate_response", flush=True)
