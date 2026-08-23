@@ -1,0 +1,12 @@
+from src.API.Auth.models import User
+from src.API.database import Base, engine
+
+
+def init_db() -> None:
+    
+    Base.metadata.create_all(bind=engine)
+
+
+if __name__ == "__main__":
+    init_db()
+    print("Database initialized successfully.")

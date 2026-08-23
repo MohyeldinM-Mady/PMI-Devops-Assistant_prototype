@@ -1,22 +1,18 @@
-from src.Retrieval.query import retrieve_documents
-from src.Retrieval.context import build_context
+from src.Retrieval.main import retrieve_context
+
+MAX_PATCH_PER_FILE = 6000
+MAX_QUERY_LENGTH = 30000
 
 
-def retrieve_historical_context(files: list[dict], n_results=3) -> str:
+def retrieve_historical_context(files: list[dict], n_results=5) -> str:
     query_parts = []
-
     for file in files:
+        patch = (file.get("patch") or "")[:MAX_PATCH_PER_FILE]
         query_parts.append(
-            f"File: {file['filename']}\n"
-            f"Status: {file['status']}\n"
-            f"Changes:\n{file['patch']}"
+            f"File: {file.get('filename', 'unknown')}\n"
+            f"Status: {file.get('status', 'unknown')}\n"
+            f"Changes:\n{patch}"
         )
 
-    query = "\n\n".join(query_parts)
-
-    results = retrieve_documents(
-        query,
-        n_results=n_results,
-    )
-
-    return build_context(results)
+    query = "\n\n".join(query_parts)[:MAX_QUERY_LENGTH]
+    return retrieve_context(query, n_results=n_results)

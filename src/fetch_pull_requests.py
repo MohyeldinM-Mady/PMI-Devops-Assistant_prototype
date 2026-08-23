@@ -1,17 +1,21 @@
 import json
-import os
+import re
+
+from pathlib import Path
+from src.config import DATA_DIR, validate_github_config
 from src.github_client import get_repo
 
-def fetch_pull_requests():
-    """
-    Pulls all pull requests from the repository and returns a list of dictionaries.
-    """
-    repo = get_repo()
-    pulls = repo.get_pulls(state="all")
-    pr_data_list = []
 
-    for pr in pulls:
-        pr_data = {
+ISSUE_REFERENCE_PATTERN = re.compile(r"(?<!\w)#(\d+)\b")
+
+
+def fetch_pull_requests():
+    validate_github_config()
+    repo = get_repo()
+    pr_data = []
+
+    for pr in repo.get_pulls(state="all"):
+        pr_data.append({
             "number": pr.number,
             "title": pr.title,
             "body": pr.body,
@@ -20,20 +24,15 @@ def fetch_pull_requests():
             "merged": pr.merged,
             "created_at": pr.created_at.isoformat() if pr.created_at else None,
             "merged_at": pr.merged_at.isoformat() if pr.merged_at else None,
-            "linked_issues": [
-                word.lstrip("#") for word in (pr.body or "").split()
-                if word.lstrip("#").isdigit() and "#" in word
-            ],
-            "files_changed": [f.filename for f in pr.get_files()]
-        }
-        pr_data_list.append(pr_data)
+            "linked_issues": ISSUE_REFERENCE_PATTERN.findall(pr.body or ""),
+            "files_changed": [file.filename for file in pr.get_files()],
+        })
 
-    return pr_data_list
+    return pr_data
 
-def save_pull_requests(prs, path="data/pull_requests.json"):
-    """
-    Writes the list of pull request dictionaries to a JSON file.
-    """
-    os.makedirs(os.path.dirname(path), exist_ok=True)
+
+def save_pull_requests(prs, path=DATA_DIR / "pull_requests.json"):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(prs, f, indent=4, ensure_ascii=False)

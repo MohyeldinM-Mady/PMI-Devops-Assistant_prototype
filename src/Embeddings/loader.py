@@ -1,6 +1,8 @@
 import json
 
-INPUT_PATH = "data/processed/knowledge_base.json"
+from src.config import PROCESSED_DIR
+
+INPUT_PATH = PROCESSED_DIR / "knowledge_base.json"
 
 
 def load_documents():

@@ -1,11 +1,9 @@
 import json
 
+from src.config import DATA_DIR
 
-def process_docs(path="data/docs.json"):
-    """
-    Reads the raw docs JSON and converts each markdown document into a
-    human-readable text document with metadata, ready for embedding.
-    """
+
+def process_docs(path=DATA_DIR / "docs.json"):
     with open(path, "r", encoding="utf-8") as f:
         docs = json.load(f)
 
@@ -14,29 +12,24 @@ def process_docs(path="data/docs.json"):
     for doc in docs:
         filename = doc["filename"]
         doc_path = doc["path"]
-        content = doc["content"].strip()
+        content = (doc.get("content") or "").strip()
 
-        # Truncate very long docs for the text summary, keep full content in metadata
-        if len(content) > 1000:
-            content_preview = content[:1000] + "... [truncated]"
-        else:
-            content_preview = content
+        normalized_filename = filename.strip().lower()
 
         text = (
-            f"Documentation file \"{filename}\" (located at {doc_path}) contains the following content:\n"
-            f"{content_preview}"
+            f'Documentation file "{filename}" (located at {doc_path}) contains the following content:\n'
+            f"{content}"
         )
 
-        document = {
-            "id": f"doc_{filename.replace('.', '_')}",
+        documents.append({
+            "id": f"doc_{normalized_filename.replace('.', '_')}",
             "type": "doc",
             "text": text,
             "metadata": {
                 "filename": filename,
                 "path": doc_path,
-                "full_content": content
-            }
-        }
-        documents.append(document)
+                "full_content": content,
+            },
+        })
 
     return documents

@@ -1,43 +1,104 @@
 from src.Reasoning.llm import generate_response
 
 
+MAX_FILES = 5
+MAX_PATCH_PER_FILE = 200
+MAX_TOTAL_PATCH = 1000
+MAX_HISTORICAL_CONTEXT = 300
+
+
+def _build_changes(files: list[dict]) -> str:
+    changes = []
+    total_chars = 0
+
+    for file in files[:MAX_FILES]:
+
+        filename = file.get("filename", "unknown")
+        status = file.get("status", "unknown")
+        patch = file.get("patch") or ""
+
+        remaining = MAX_TOTAL_PATCH - total_chars
+
+        if remaining <= 0:
+            break
+
+        patch = patch[:min(MAX_PATCH_PER_FILE, remaining)]
+
+        total_chars += len(patch)
+
+        changes.append(
+            f"File: {filename}\n"
+            f"Status: {status}\n"
+            f"Patch:\n{patch}"
+        )
+
+    return "\n\n".join(changes)
+
+
 def analyze_pull_request(
     files: list[dict],
     historical_context: str,
 ) -> str:
-    changes = []
 
-    for file in files:
-        changes.append(
-            f"File: {file['filename']}\n"
-            f"Status: {file['status']}\n"
-            f"Patch:\n{file['patch']}"
-        )
+    print(">>> analyze_pull_request: START", flush=True)
+
+    print(">>> Starting _build_changes", flush=True)
+
+    changes = _build_changes(files)
+
+    print(">>> Finished _build_changes", flush=True)
+
+    historical_context = (
+        historical_context or ""
+    )[:MAX_HISTORICAL_CONTEXT]
+
+    print(
+        f"Files analyzed: {min(len(files), MAX_FILES)}",
+        flush=True,
+    )
+
+    print(
+        f"Current diff size: {len(changes)} characters",
+        flush=True,
+    )
+
+    print(
+        f"Historical context size: {len(historical_context)} characters",
+        flush=True,
+    )
 
     prompt = f"""
-You are PMI, an AI DevOps assistant reviewing a GitHub Pull Request.
+    Review this GitHub Pull Request using only the provided information.
 
-Analyze the current Pull Request using ONLY the provided information.
+    CURRENT PR:
+    {changes}
 
-CURRENT PULL REQUEST:
-{"\n\n".join(changes)}
+    PROJECT CONTEXT:
+    {historical_context}
 
-HISTORICAL PROJECT CONTEXT:
-{historical_context}
+    Report only confirmed bugs, regressions, security issues, or broken behavior.
 
-Provide a concise review containing:
+    Rules:
+    - Do not invent facts or speculate.
+    - Ignore style issues.
+    - Include file path and evidence for each finding.
+    - If no confirmed issues exist, say exactly:
+    No significant issues found.
 
-1. Potential risks or warnings.
-2. Recommendations for the developer.
-3. Relevant historical context when applicable.
+    Return only the concise final review.
+    """
 
-Do not invent facts that are not present in the provided context.
-If there are no meaningful risks, say so clearly.
-"""
+    print(">>> Calling generate_response", flush=True)
 
-    # return generate_response(prompt)
-    analysis = generate_response(prompt)
+    analysis = generate_response(
+        prompt
+    )
 
+    print(">>> generate_response returned", flush=True)
 
+    print(
+        f"Analysis length: {len(analysis or '')}",
+        flush=True,
+    )
 
-    return analysis
+    return analysis.strip()

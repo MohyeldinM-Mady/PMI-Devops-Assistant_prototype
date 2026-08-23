@@ -1,34 +1,19 @@
-from src.Retrieval.query import retrieve_documents
-from src.Retrieval.context import build_context
-from src.Reasoning.prompt import build_prompt
 from src.Reasoning.llm import generate_response
+from src.Reasoning.prompt import build_prompt
+from src.Retrieval.main import retrieve_context
 
 
-def answer_question(question: str, n_results=3):
-    results = retrieve_documents(
-        question,
-        n_results=n_results,
-    )
-
-    context = build_context(results)
-
-    prompt = build_prompt(
-        question,
-        context,
-    )
-
-    answer = generate_response(prompt)
-
-    return answer
+def answer_question(question: str, n_results: int = 3) -> str:
+    context = retrieve_context(question, n_results=n_results)
+    if not context:
+        return "I couldn't find relevant project context for that question."
+    return generate_response(build_prompt(question, context))
 
 
 def main():
-    question = input("Ask a question: ")
-
-    answer = answer_question(question)
-
+    question = input("Ask a question: ").strip()
     print("\nAnswer:\n")
-    print(answer)
+    print(answer_question(question))
 
 
 if __name__ == "__main__":
