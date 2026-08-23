@@ -2,25 +2,31 @@ import os
 from functools import lru_cache
 
 from dotenv import load_dotenv
-from huggingface_hub import InferenceClient
+from openai import OpenAI
 
 
 load_dotenv()
 
+
 MODEL_NAME = os.getenv(
     "LLM_MODEL",
-    "openai/gpt-oss-20b:groq",
+    "openrouter/free",
 )
 
 
 @lru_cache(maxsize=1)
 def get_client():
-    token = os.getenv("HF_TOKEN")
+    api_key = os.getenv("OPENROUTER_API_KEY")
 
-    if not token:
-        raise RuntimeError("HF_TOKEN is not configured.")
+    if not api_key:
+        raise RuntimeError(
+            "OPENROUTER_API_KEY is not configured."
+        )
 
-    return InferenceClient(api_key=token)
+    return OpenAI(
+        api_key=api_key,
+        base_url="https://openrouter.ai/api/v1",
+    )
 
 
 def generate_response(
@@ -30,7 +36,10 @@ def generate_response(
     temperature: float = 0.1,
 ) -> str:
 
-    response = get_client().chat_completion(
+    print(">>> generate_response START", flush=True)
+    print(f">>> Model: {MODEL_NAME}", flush=True)
+
+    response = get_client().chat.completions.create(
         model=MODEL_NAME,
         messages=[
             {
@@ -44,13 +53,21 @@ def generate_response(
 
     choice = response.choices[0]
 
-    print(f"finish_reason: {choice.finish_reason}")
-    print(f"usage: {getattr(response, 'usage', None)}")
+    print(f"finish_reason: {choice.finish_reason}", flush=True)
+    print(
+        f"usage: {getattr(response, 'usage', None)}",
+        flush=True,
+    )
 
     content = choice.message.content
 
     if not content:
-        print("WARNING: LLM returned an empty response.")
+        print(
+            "WARNING: LLM returned an empty response.",
+            flush=True,
+        )
         return ""
+
+    print(">>> generate_response DONE", flush=True)
 
     return content.strip()

@@ -1,622 +1,254 @@
 [
     {
-        "sha": "b5acec867784e728b54ae585a6873d646ea64942",
-        "author": "Amrhany964",
-        "date": "2026-08-12T00:55:04+00:00",
-        "message": "feat: add repository preparation pipeline",
+        "sha": "81efbbf5c1b106bc824395c3b14f36ad8251ed04",
+        "author": "Aastha M Shukla",
+        "date": "2026-06-12T21:47:06+00:00",
+        "message": "Merge pull request #10 from kariebi/issue-8-database-guide-signed\n\nResolve issue #8 by adding database interview preparation guide",
         "files_changed": [
-            "src/UI/app.py",
-            "src/pipeline.py",
-            "test_github.py"
+            "Databases/database-interview-prep-guide.md"
         ]
     },
     {
-        "sha": "26afce2cd913f62bec969ac16f4d585a4450c529",
-        "author": "Amrhany964",
-        "date": "2026-08-11T23:30:49+00:00",
-        "message": "chore: update project dependencies",
+        "sha": "5494d30ab0bf62db971f5b583f5c373c8b5c8ce7",
+        "author": "kariebi",
+        "date": "2026-06-12T04:55:24+00:00",
+        "message": "Resolve issue #8 by adding database interview preparation guide",
         "files_changed": [
-            "requirements.txt"
+            "Databases/database-interview-prep-guide.md"
         ]
     },
     {
-        "sha": "d1504d9d6cf6f51b12e982d822cabd940c99584f",
-        "author": "Amr Hany",
-        "date": "2026-08-11T23:26:34+00:00",
-        "message": "Add Phase 7 details and update phase numbering\n\nUpdated README to include Phase 7 details and correct phase numbering.",
+        "sha": "5bd9ac62aca36dd8d5319fc1c101f16a000f1582",
+        "author": "Aastha M Shukla",
+        "date": "2026-06-09T20:13:14+00:00",
+        "message": "Merge pull request #5 from TasStef/DataStructures/Linked-List-Issue-4\n\nIssue 4 - Linked List",
+        "files_changed": [
+            "Data Structures/LinkedList.md",
+            "README.md"
+        ]
+    },
+    {
+        "sha": "60e13ea2bb056c30ea869026457588e9437772c8",
+        "author": "Aastha M Shukla",
+        "date": "2026-06-09T20:11:06+00:00",
+        "message": "Merge pull request #6 from caioregis/main\n\nchore: adjust pdf link",
         "files_changed": [
             "README.md"
         ]
     },
     {
-        "sha": "fb62230df468ead82afe0240be3a316e2a0a1ead",
-        "author": "Amr Hany",
-        "date": "2026-08-11T23:11:07+00:00",
-        "message": "Merge pull request #15 from MohyeldinM-Mady/feature/chatbot-ui\n\nfeat: add PMI chatbot UI and API",
+        "sha": "a70d3688206e73973c4095728642c2c619c6782f",
+        "author": "Aastha M Shukla",
+        "date": "2026-06-09T20:10:22+00:00",
+        "message": "Merge pull request #7 from Arulmozhivarman-S/add-algorithms\n\nadded sliding window algo",
         "files_changed": [
-            "requirements.txt",
-            "src/API/__init__.py",
-            "src/API/main.py",
-            "src/UI/__init__.py",
-            "src/UI/app.py"
+            "Algorithms/Sliding-Window-Algo.md"
         ]
     },
     {
-        "sha": "ff0698d2d228ecbab0813573fd6dfb40ba2e0ca5",
-        "author": "Amrhany964",
-        "date": "2026-08-11T23:02:06+00:00",
-        "message": "feat: add PMI chatbot UI and API",
+        "sha": "2bc6de6e1e765ada58c045169e4a2cfe2048a377",
+        "author": "Anitha-26",
+        "date": "2026-06-06T16:25:15+00:00",
+        "message": "added sliding window algo",
         "files_changed": [
-            "requirements.txt",
-            "src/API/__init__.py",
-            "src/API/main.py",
-            "src/UI/__init__.py",
-            "src/UI/app.py"
+            "Algorithms/Sliding-Window-Algo.md"
         ]
     },
     {
-        "sha": "4720b5a9a8745365fc50c4bef98949338ea4a5a9",
-        "author": "Amr Hany",
-        "date": "2026-08-11T16:10:22+00:00",
-        "message": "Integrate Phase 9 for GitHub Actions automation\n\nAdded Phase 9 to the PMI pipeline, integrating it with GitHub Actions for automated analysis of Pull Requests. Updated the README to reflect changes in project phases and workflow details.",
+        "sha": "699fb04b65992db911087473310de84d813e6671",
+        "author": "Caio de Andrade Régis",
+        "date": "2025-11-24T23:08:55+00:00",
+        "message": "chrore: adjust pdf link",
         "files_changed": [
             "README.md"
         ]
     },
     {
-        "sha": "d16a3cbf0d387840eb815fc241e064d62b336d15",
-        "author": "Amr Hany",
-        "date": "2026-08-11T15:45:58+00:00",
-        "message": "Merge pull request #14 from MohyeldinM-Mady/feature/devops-integration\n\nci: add PMI pull request workflow",
+        "sha": "d7c8dfcad3d568f735df26c982ee9118f9bd2ebe",
+        "author": "TasosStefanidis",
+        "date": "2025-08-31T13:32:42+00:00",
+        "message": "Issue 4 - Linked List\n- Added info on linked lists and reference links",
         "files_changed": [
-            ".github/workflows/pmi-pr.yml",
-            "src/DevOps/__init__.py",
-            "src/DevOps/analyzer.py",
-            "src/DevOps/github.py",
-            "src/DevOps/main.py",
-            "src/DevOps/retrieval.py",
-            "src/Reasoning/llm.py",
-            "src/VectorDB/indexer.py"
-        ]
-    },
-    {
-        "sha": "63fbb1ea98df8188dd9eb0c98b74e639b7436f4d",
-        "author": "Amrhany964",
-        "date": "2026-08-11T15:41:41+00:00",
-        "message": "chore: remove AI response debug logging",
-        "files_changed": [
-            "src/Reasoning/llm.py"
-        ]
-    },
-    {
-        "sha": "f3648f3a059f1daf99356eca14eef58e372cbc2c",
-        "author": "Amrhany964",
-        "date": "2026-08-11T15:33:16+00:00",
-        "message": "comments",
-        "files_changed": [
-            "src/Reasoning/llm.py"
-        ]
-    },
-    {
-        "sha": "bbed61f3a8708cf32a3deeca3e3d65fa23343b3d",
-        "author": "Amrhany964",
-        "date": "2026-08-11T15:25:37+00:00",
-        "message": "comments",
-        "files_changed": [
-            ".github/workflows/pmi-pr.yml"
-        ]
-    },
-    {
-        "sha": "b28344fdb46fc530625f315049e52fdeb48c91d4",
-        "author": "Amrhany964",
-        "date": "2026-08-11T15:20:10+00:00",
-        "message": "comments",
-        "files_changed": [
-            "src/DevOps/github.py"
-        ]
-    },
-    {
-        "sha": "6389aae19a465e1f09d6cd646e6e61d94d7003b8",
-        "author": "Amrhany964",
-        "date": "2026-08-11T15:15:08+00:00",
-        "message": "comments",
-        "files_changed": [
-            ".github/workflows/pmi-pr.yml",
-            "src/DevOps/github.py",
-            "src/DevOps/main.py"
-        ]
-    },
-    {
-        "sha": "161c3f13d59b4bdc344b43a3ffea06fda443d45c",
-        "author": "Amrhany964",
-        "date": "2026-08-11T14:55:23+00:00",
-        "message": "cleanup: remove LLM debug output",
-        "files_changed": [
-            "src/DevOps/analyzer.py",
-            "src/Reasoning/llm.py"
-        ]
-    },
-    {
-        "sha": "8eae35a36aca1c9de9217427605596f43c20f6de",
-        "author": "Amrhany964",
-        "date": "2026-08-11T14:48:41+00:00",
-        "message": "debug: inspect HF LLM response",
-        "files_changed": [
-            "src/Reasoning/llm.py"
-        ]
-    },
-    {
-        "sha": "47cc1ae908a5a831547c7cf4b9bdaaeaed61d5b9",
-        "author": "Amrhany964",
-        "date": "2026-08-11T14:40:44+00:00",
-        "message": "debug: inspect HF LLM response",
-        "files_changed": [
-            "src/Reasoning/llm.py"
-        ]
-    },
-    {
-        "sha": "49d3d13c9eb692289e31fa0c21fd619238b60419",
-        "author": "Amrhany964",
-        "date": "2026-08-11T14:35:12+00:00",
-        "message": "debug: print raw AI response",
-        "files_changed": [
-            "src/DevOps/analyzer.py"
-        ]
-    },
-    {
-        "sha": "fac4f3583197f5dafa6857d1c04ead154eab35e9",
-        "author": "Amrhany964",
-        "date": "2026-08-11T14:22:47+00:00",
-        "message": "feat: add AI analysis to PR pipeline",
-        "files_changed": [
-            ".github/workflows/pmi-pr.yml"
-        ]
-    },
-    {
-        "sha": "7b8f8219ff1e8b9df24efe6e2b33d66d741d5a98",
-        "author": "Amrhany964",
-        "date": "2026-08-11T14:10:48+00:00",
-        "message": "feat: add AI analysis to PR pipeline",
-        "files_changed": [
-            "src/DevOps/analyzer.py",
-            "src/DevOps/main.py"
-        ]
-    },
-    {
-        "sha": "7943bfe79de4a44ae2780b0fbe80940fd5d3b12a",
-        "author": "Amrhany964",
-        "date": "2026-08-11T13:52:47+00:00",
-        "message": "fix: sanitize ChromaDB metadata",
-        "files_changed": [
-            "src/VectorDB/indexer.py"
-        ]
-    },
-    {
-        "sha": "843d95212102c965f64d89d4d7e752431ba3ff1e",
-        "author": "Amrhany964",
-        "date": "2026-08-11T13:44:59+00:00",
-        "message": "ci: collect project data in PR workflow",
-        "files_changed": [
-            ".github/workflows/pmi-pr.yml"
-        ]
-    },
-    {
-        "sha": "2b3ffd445b367af3ca75d62968c87d11998244e6",
-        "author": "Amrhany964",
-        "date": "2026-08-11T13:37:06+00:00",
-        "message": "ci: collect project data in PR workflow",
-        "files_changed": [
-            ".github/workflows/pmi-pr.yml"
-        ]
-    },
-    {
-        "sha": "c45a05f1abc67119b869de501d3b651394f52829",
-        "author": "Amrhany964",
-        "date": "2026-08-11T13:32:11+00:00",
-        "message": "ci: collect project data in PR workflow",
-        "files_changed": [
-            ".github/workflows/pmi-pr.yml"
-        ]
-    },
-    {
-        "sha": "17692c572ece62337e072948a8ef149914333364",
-        "author": "Amrhany964",
-        "date": "2026-08-11T13:15:32+00:00",
-        "message": "feat: connect PR changes to project retrieval",
-        "files_changed": [
-            "src/DevOps/main.py",
-            "src/DevOps/retrieval.py"
-        ]
-    },
-    {
-        "sha": "ced42f3c8907630e5c6fc0a1c840839f1e907f81",
-        "author": "Amrhany964",
-        "date": "2026-08-11T13:05:39+00:00",
-        "message": "ci: install dependencies from requirements",
-        "files_changed": [
-            ".github/workflows/pmi-pr.yml"
-        ]
-    },
-    {
-        "sha": "641836ee46568c6447ed0e9a64c05b0616765058",
-        "author": "Amrhany964",
-        "date": "2026-08-11T13:03:59+00:00",
-        "message": "ci: install dependencies from requirements",
-        "files_changed": [
-            ".github/workflows/pmi-pr.yml"
-        ]
-    },
-    {
-        "sha": "3f0d942b93115db3f4af39086bd47a1d7b8ac643",
-        "author": "Amrhany964",
-        "date": "2026-08-11T13:00:13+00:00",
-        "message": "feat: analyze pull request changes",
-        "files_changed": [
-            ".github/workflows/pmi-pr.yml",
-            "src/DevOps/__init__.py",
-            "src/DevOps/github.py",
-            "src/DevOps/main.py"
-        ]
-    },
-    {
-        "sha": "746ba577a2dc483d167dd5e1c629df950c245a50",
-        "author": "Amrhany964",
-        "date": "2026-08-11T12:38:34+00:00",
-        "message": "ci: configure GitHub API permissions",
-        "files_changed": [
-            ".github/workflows/pmi-pr.yml"
-        ]
-    },
-    {
-        "sha": "b950e1bd626847fde471a3f22385333402c9853d",
-        "author": "Amrhany964",
-        "date": "2026-08-11T12:18:49+00:00",
-        "message": "ci: add PMI pull request workflow",
-        "files_changed": [
-            ".github/workflows/pmi-pr.yml"
-        ]
-    },
-    {
-        "sha": "577687e1202499d5b2434061d1be2fcff4c96e86",
-        "author": "Amr Hany",
-        "date": "2026-08-10T13:36:43+00:00",
-        "message": "Revise README for PMI project phases and AI Reasoning\n\nUpdated the README to reflect changes in project phases and added details for Phase 6 AI Reasoning.",
-        "files_changed": [
+            "Data Structures/LinkedList.md",
             "README.md"
         ]
     },
     {
-        "sha": "dd571427685fec3cf75a9169fe1191682b3e62a7",
-        "author": "Amr Hany",
-        "date": "2026-08-10T13:28:48+00:00",
-        "message": "Merge pull request #13 from MohyeldinM-Mady/feature/rag-retrieval\n\nfeat: add AI reasoning with RAG",
+        "sha": "0ed7aa3d48a313467b2a920ee914fb2d1a4e6ad7",
+        "author": "AasthaPersonalGithub",
+        "date": "2024-07-23T01:43:14+00:00",
+        "message": "LinkedList",
         "files_changed": [
-            ".env.example",
-            "requirements.txt",
-            "src/Reasoning/__init__.py",
-            "src/Reasoning/llm.py",
-            "src/Reasoning/main.py",
-            "src/Reasoning/prompt.py"
+            "Data Structures/LinkedList.md",
+            "Data Structures/LinkedList.py"
         ]
     },
     {
-        "sha": "1ce91511f8941c7307e822923cff3107e53a4902",
-        "author": "Amrhany964",
-        "date": "2026-08-10T13:21:56+00:00",
-        "message": "feat: add AI reasoning with RAG",
+        "sha": "2d38f84680cac091d9b836a7c61056df90656f01",
+        "author": "AasthaPersonalGithub",
+        "date": "2024-07-22T23:20:42+00:00",
+        "message": "Two Pointer",
         "files_changed": [
-            ".env.example",
-            "requirements.txt",
-            "src/Reasoning/__init__.py",
-            "src/Reasoning/llm.py",
-            "src/Reasoning/main.py",
-            "src/Reasoning/prompt.py"
+            "Algorithms/Array.js",
+            "Algorithms/Array.py",
+            "Algorithms/Two-Pointer-Algo.md",
+            "Algorithms/Two-Pointer-Algo.py"
         ]
     },
     {
-        "sha": "52cee3221f2c50795bcf30dbe495f3d8378787ef",
-        "author": "Amr Hany",
-        "date": "2026-08-10T12:47:35+00:00",
-        "message": "Revise PMI pipeline phases and add retrieval details\n\nUpdated project phases and added details for Phase 5 retrieval process.",
+        "sha": "d9c2281133f47bde704acd3f02ba7cb64d7143c7",
+        "author": "AasthaPersonalGithub",
+        "date": "2024-07-14T16:36:48+00:00",
+        "message": "two-pointer-algo",
         "files_changed": [
-            "README.md"
+            "Algorithms/Two-Pointer-Algo.md"
         ]
     },
     {
-        "sha": "6f76010358238c7c38ba07b50002a514cc7bf986",
-        "author": "Amr Hany",
-        "date": "2026-08-10T12:35:35+00:00",
-        "message": "Merge pull request #12 from MohyeldinM-Mady/feature/rag-retrieval\n\nfeat: add RAG retrieval pipeline",
+        "sha": "f7c36c6b550f46a8d7659145d9afb73265a2cbd1",
+        "author": "Aastha M Shukla",
+        "date": "2024-06-05T23:44:24+00:00",
+        "message": "Merge pull request #3 from aasthas2022/versioncontrolsystem/git\n\nversioncontrolsystem/git",
         "files_changed": [
-            "src/Retrieval/__init__.py",
-            "src/Retrieval/context.py",
-            "src/Retrieval/embedder.py",
-            "src/Retrieval/main.py",
-            "src/Retrieval/query.py"
-        ]
-    },
-    {
-        "sha": "fcb952504459e777c3d9c0746cb2300c0a55c200",
-        "author": "Amrhany964",
-        "date": "2026-08-10T12:34:30+00:00",
-        "message": "feat: add RAG retrieval pipeline",
-        "files_changed": [
-            "src/Retrieval/__init__.py",
-            "src/Retrieval/context.py",
-            "src/Retrieval/embedder.py",
-            "src/Retrieval/main.py",
-            "src/Retrieval/query.py"
-        ]
-    },
-    {
-        "sha": "774f0a19e02aa365af6787f108283a9b2714ed5d",
-        "author": "Amr Hany",
-        "date": "2026-08-10T11:54:12+00:00",
-        "message": "Revise README for Phase 4 and vector database details\n\nUpdated the README to reflect the addition of Phase 4 and details about the vector database.",
-        "files_changed": [
-            "README.md"
-        ]
-    },
-    {
-        "sha": "95a58754001a20464b925fd954619b31f04e90ab",
-        "author": "Amr Hany",
-        "date": "2026-08-10T11:47:02+00:00",
-        "message": "Merge pull request #11 from MohyeldinM-Mady/feature/vector-database\n\nphase 4 : vector store",
-        "files_changed": [
-            "requirements.txt",
-            "src/VectorDB/__init__.py",
-            "src/VectorDB/database.py",
-            "src/VectorDB/indexer.py",
-            "src/VectorDB/loader.py",
-            "src/VectorDB/main.py",
-            "src/VectorDB/query.py"
-        ]
-    },
-    {
-        "sha": "86bfad410b5e3f485be6746d815dcf69f9e8c3bb",
-        "author": "Amrhany964",
-        "date": "2026-08-10T11:45:00+00:00",
-        "message": "feat: add vector database indexing",
-        "files_changed": [
-            "requirements.txt",
-            "src/VectorDB/__init__.py",
-            "src/VectorDB/database.py",
-            "src/VectorDB/indexer.py",
-            "src/VectorDB/loader.py",
-            "src/VectorDB/main.py",
-            "src/VectorDB/query.py"
-        ]
-    },
-    {
-        "sha": "729fbda7e447ca0f6e60799d088e0526a8551631",
-        "author": "Amr Hany",
-        "date": "2026-08-09T07:02:19+00:00",
-        "message": "Revise README for Phase 3 completion and details\n\nUpdated the README to reflect the completion of Phase 3 and added details about embedding generation.",
-        "files_changed": [
-            "README.md"
-        ]
-    },
-    {
-        "sha": "4dcf1b47b089fd9f148d6897e1e23b701f204f20",
-        "author": "Amr Hany",
-        "date": "2026-08-09T06:47:56+00:00",
-        "message": "Merge pull request #10 from MohyeldinM-Mady/feature/embeddings\n\nadd embedding generation pipeline",
-        "files_changed": [
-            ".gitignore",
-            "requirements.txt",
-            "src/Embeddings/__init__.py",
-            "src/Embeddings/builder.py",
-            "src/Embeddings/generator.py",
-            "src/Embeddings/loader.py",
-            "src/Embeddings/main.py"
-        ]
-    },
-    {
-        "sha": "67e50cea6dca27c90a3f69336a1104507563748b",
-        "author": "Amrhany964",
-        "date": "2026-08-09T06:42:54+00:00",
-        "message": "embedding pipeline- phase 3",
-        "files_changed": [
-            ".gitignore",
-            "requirements.txt",
-            "src/Embeddings/__init__.py",
-            "src/Embeddings/builder.py",
-            "src/Embeddings/generator.py",
-            "src/Embeddings/loader.py",
-            "src/Embeddings/main.py"
-        ]
-    },
-    {
-        "sha": "f9f38534f53c43201a0ed47635f9869f04fa7667",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:32:15+00:00",
-        "message": "Merge pull request #9 from MohyeldinM-Mady/feature/update-readme\n\nUpdate README to cover Phase 1 and Phase 2",
-        "files_changed": [
-            "README.md"
-        ]
-    },
-    {
-        "sha": "7f75e3ff642d031a558b3c9dedae59850379a1d2",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:30:45+00:00",
-        "message": "Update README to cover Phase 1 and Phase 2",
-        "files_changed": [
-            "README.md"
-        ]
-    },
-    {
-        "sha": "f9eca262da7d44114cd94bdb2d404f64408b9652",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:25:54+00:00",
-        "message": "Merge pull request #8 from MohyeldinM-Mady/feature/build-knowledge-base\n\nImplement build_knowledge_base.py orchestrator",
-        "files_changed": [
-            "src/build_knowledge_base.py"
-        ]
-    },
-    {
-        "sha": "80d01e6cd28d2f0e45d9a7e957be59594dd91b3e",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:25:07+00:00",
-        "message": "Implement build_knowledge_base.py orchestrator",
-        "files_changed": [
-            "src/build_knowledge_base.py"
-        ]
-    },
-    {
-        "sha": "26d2bf31ab9707077797b3b92be50360024c67a2",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:22:01+00:00",
-        "message": "Merge pull request #7 from MohyeldinM-Mady/feature/process-docs\n\nImplement process_docs.py",
-        "files_changed": [
-            "src/process_docs.py"
-        ]
-    },
-    {
-        "sha": "84594c9ec9f8d5cd8346513533e37aa1900a8a81",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:21:14+00:00",
-        "message": "Implement process_docs.py",
-        "files_changed": [
-            "src/process_docs.py"
-        ]
-    },
-    {
-        "sha": "bc4f4538065d7222a22d8e025eb73fbd258f671f",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:18:58+00:00",
-        "message": "Merge pull request #6 from MohyeldinM-Mady/feature/process-pull-requests\n\nImplement process_pull_requests.py",
-        "files_changed": [
-            "src/process_pull_requests.py"
-        ]
-    },
-    {
-        "sha": "91b92eca626259005e7d72a085abd4ac0ad875f6",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:18:20+00:00",
-        "message": "Implement process_pull_requests.py",
-        "files_changed": [
-            "src/process_pull_requests.py"
-        ]
-    },
-    {
-        "sha": "9231bc474f524daa957600a0a11f77c8b83db38f",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:16:28+00:00",
-        "message": "Merge pull request #5 from MohyeldinM-Mady/feature/process-issues\n\nImplement process_issues.py",
-        "files_changed": [
-            "src/process_issues.py"
-        ]
-    },
-    {
-        "sha": "f3f768918ccf480dc6fccfcdca2669313d55240a",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:15:53+00:00",
-        "message": "Implement process_issues.py",
-        "files_changed": [
-            "src/process_issues.py"
-        ]
-    },
-    {
-        "sha": "f660df971c662f834af1645fa065160d81d1e173",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:13:55+00:00",
-        "message": "Merge pull request #4 from MohyeldinM-Mady/feature/knowledge-extraction\n\nImplement process_commits.py",
-        "files_changed": [
-            "src/process_commits.py"
-        ]
-    },
-    {
-        "sha": "c631c8d49ba8b7ac96541c5cc9692365383a62f0",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:11:59+00:00",
-        "message": "Implement process_commits.py",
-        "files_changed": [
-            "src/process_commits.py"
-        ]
-    },
-    {
-        "sha": "159b1a05a0ed568641cc55bcca8c2d5aede246a6",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:03:40+00:00",
-        "message": "Activate all fetchers in collect.py",
-        "files_changed": [
-            "src/collect.py"
-        ]
-    },
-    {
-        "sha": "59583d6cb92914718f0a0533a960476919553891",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:01:16+00:00",
-        "message": "Merge pull request #2 from MohyeldinM-Mady/feature/fetch-pull-requests\n\nImplement fetch_pull_requests.py",
-        "files_changed": [
-            "src/fetch_pull_requests.py"
-        ]
-    },
-    {
-        "sha": "4efcdd67adbb46edf0c4ca7ab0209729cb0ecb62",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T02:00:46+00:00",
-        "message": "Merge pull request #1 from MohyeldinM-Mady/feature/fetch-issues\n\nImplement fetch_issues.py",
-        "files_changed": [
-            "src/fetch_issues.py"
-        ]
-    },
-    {
-        "sha": "cb16e63ca486d1fa217740ae9fe3b90a79ad5439",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T01:59:55+00:00",
-        "message": "Merge pull request #3 from MohyeldinM-Mady/feature/fetch-docs\n\nImplement fetch_docs.py",
-        "files_changed": [
-            "src/fetch_docs.py"
-        ]
-    },
-    {
-        "sha": "21a7138af4a0ed689a9997a9b8cdc887af8d902e",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T01:54:07+00:00",
-        "message": "Implement fetch_docs.py",
-        "files_changed": [
-            "src/fetch_docs.py"
-        ]
-    },
-    {
-        "sha": "d3dc3a8d0604cde683f93f3442d1922c309779b2",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T01:50:53+00:00",
-        "message": "Implement fetch_pull_requests.py",
-        "files_changed": [
-            "src/fetch_pull_requests.py"
-        ]
-    },
-    {
-        "sha": "03b92a8f35b95d636076624f0205ba9a96e87e64",
-        "author": "Mourad Fikry",
-        "date": "2026-08-09T01:44:01+00:00",
-        "message": "Implement fetch_issues.py",
-        "files_changed": [
-            "src/fetch_issues.py"
-        ]
-    },
-    {
-        "sha": "42b1f063eb6cb3a2d587ace31f5a7a6c7c44fdfc",
-        "author": "Mohyeldin Mohamed Mady",
-        "date": "2026-08-07T18:48:46+00:00",
-        "message": "initial commit",
-        "files_changed": [
-            ".env.example",
-            ".gitignore",
             "README.md",
-            "data/.gitkeep",
-            "requirements.txt",
-            "src/__init__.py",
-            "src/collect.py",
-            "src/config.py",
-            "src/fetch_commits.py",
-            "src/fetch_docs.py",
-            "src/fetch_issues.py",
-            "src/fetch_pull_requests.py",
-            "src/github_client.py",
-            "test_github.py"
+            "Version Control Systems/Git.md"
+        ]
+    },
+    {
+        "sha": "7b74c64f283320a8da8b2f55aaaa9e2b33da3751",
+        "author": "AasthaPersonalGithub",
+        "date": "2024-06-05T23:43:55+00:00",
+        "message": "versioncontrolsystem/git",
+        "files_changed": [
+            "README.md",
+            "Version Control Systems/Git.md"
+        ]
+    },
+    {
+        "sha": "78803f9087c796c6823e78761831c8a6185eeed0",
+        "author": "Aastha M Shukla",
+        "date": "2024-06-05T23:22:44+00:00",
+        "message": "Merge pull request #2 from aasthas2022/SystemDesign/RestfulArch\n\nSystemDesign/RestfulArch",
+        "files_changed": [
+            "Algorithms/.gitkeep",
+            "Data Structures/.gitkeep",
+            "README.md",
+            "System Design/.gitkeep",
+            "System Design/RESTfulArchitecture.md"
+        ]
+    },
+    {
+        "sha": "31a9ce450ca4e260250c76ed4f93eeb821683065",
+        "author": "AasthaPersonalGithub",
+        "date": "2024-06-05T23:22:13+00:00",
+        "message": "SystemDesign/RestfulArch",
+        "files_changed": [
+            "Algorithms/.gitkeep",
+            "Data Structures/.gitkeep",
+            "README.md",
+            "System Design/.gitkeep",
+            "System Design/RESTfulArchitecture.md"
+        ]
+    },
+    {
+        "sha": "eb5181bb43cff6bbdaaeb8c49494734983efd066",
+        "author": "Aastha M Shukla",
+        "date": "2024-06-05T23:03:19+00:00",
+        "message": "Merge pull request #1 from aasthas2022/SystemDesign/Microservices\n\nSystemDesign/Microservices",
+        "files_changed": [
+            "README.md",
+            "System Design/Microservices.md"
+        ]
+    },
+    {
+        "sha": "e62eb82708a0056e2576d69fda97c2a69633626b",
+        "author": "AasthaPersonalGithub",
+        "date": "2024-06-05T23:02:15+00:00",
+        "message": "SystemDesign/Microservices",
+        "files_changed": [
+            "README.md",
+            "System Design/Microservices.md"
+        ]
+    },
+    {
+        "sha": "bcca3468183a1be44abd502203ef45ff25a4e1bd",
+        "author": "AasthaPersonalGithub",
+        "date": "2024-05-26T04:15:46+00:00",
+        "message": "Array-Theory-Some-Algo",
+        "files_changed": [
+            "Algorithms/Array.js",
+            "Algorithms/Array.py",
+            "Data Structures/Arrays.md",
+            "README.md"
+        ]
+    },
+    {
+        "sha": "db20fe15dd8524f14f8ce83fc8cd3efa09f410f0",
+        "author": "AasthaPersonalGithub",
+        "date": "2024-05-07T23:43:12+00:00",
+        "message": "StringAlgo and PDF version",
+        "files_changed": [
+            "README.md",
+            "SDE-Interview-and-Prep-Roadmap.pdf"
+        ]
+    },
+    {
+        "sha": "5c7ed651ba976cd2744bac82c0f1e63a1ddbeb0f",
+        "author": "AasthaPersonalGithub",
+        "date": "2024-04-03T19:50:09+00:00",
+        "message": "Readmefixed",
+        "files_changed": [
+            "README.md"
+        ]
+    },
+    {
+        "sha": "61227cc385d954bee585af2f0803f34f8df05e6b",
+        "author": "AasthaPersonalGithub",
+        "date": "2024-04-03T19:46:05+00:00",
+        "message": "Fix readme",
+        "files_changed": [
+            "README.md"
+        ]
+    },
+    {
+        "sha": "d96b228858cef59e9159f289ca46fb4362f8fa03",
+        "author": "AasthaPersonalGithub",
+        "date": "2024-04-03T19:44:51+00:00",
+        "message": "System Design Resources",
+        "files_changed": [
+            "README.md",
+            "System Design/Resources/Designing Data Intensive Applications by Martin Kleppmann.pdf",
+            "System Design/Resources/System Design Interview by Alex Xu.pdf"
+        ]
+    },
+    {
+        "sha": "80acdf59a91c896f54d4b33c3855c8ecf8f4dbcd",
+        "author": "AasthaPersonalGithub",
+        "date": "2024-03-28T19:13:40+00:00",
+        "message": "First commit",
+        "files_changed": [
+            "Algorithms/.gitkeep",
+            "Data Structures/.gitkeep",
+            "Databases/.gitkeep",
+            "Networking/.gitkeep",
+            "Operating Systems/.gitkeep",
+            "Programming Languages and Concepts/.gitkeep",
+            "README.md",
+            "Security/.gitkeep",
+            "Software Development Methodologies/.gitkeep",
+            "System Architecture/.gitkeep",
+            "System Design/.gitkeep",
+            "Testing/.gitkeep",
+            "Version Control Systems/.gitkeep"
+        ]
+    },
+    {
+        "sha": "723a0d88be50b2268aa1b1ab2cf152e685fe2e03",
+        "author": "Aastha M Shukla",
+        "date": "2024-03-28T17:31:17+00:00",
+        "message": "Initial commit",
+        "files_changed": [
+            "README.md"
         ]
     }
 ]
