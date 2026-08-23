@@ -1,6 +1,30 @@
 # PMI — Project Memory Intelligence
 
-PMI is a GitHub-centric project-memory and DevOps assistant. It collects a repository's commits, issues, pull requests, and Markdown documentation; turns them into structured knowledge; generates embeddings; indexes the knowledge in ChromaDB; and exposes both a retrieval/reasoning API and an automated Pull Request reviewer.
+> Give your codebase a memory.
+
+PMI is a GitHub-aware assistant for understanding how a project has evolved. It turns repository history and documentation into a searchable project memory, then uses that memory to answer questions in context and review new pull requests against the project’s own history.
+
+## Why PMI
+
+Important engineering context is usually scattered across commit messages, issues, pull requests, and documentation. PMI brings those sources together so developers can ask questions such as:
+
+- What changed in PR #15, and which files were affected?
+- What was the previous or next commit related to this change?
+- What is the purpose of this project?
+- Does this pull request introduce a confirmed bug, regression, or security issue in the context of the existing codebase?
+
+PMI keeps factual lookups deterministic and uses an LLM only for semantic questions and evidence-based review. This makes common repository queries predictable while still allowing deeper project-level reasoning.
+
+## What it provides
+
+- **Project memory:** Collects commits, issues, pull requests, and Markdown documentation from GitHub.
+- **Grounded chat:** Retrieves relevant project context before generating an answer.
+- **Reference-aware follow-ups:** Keeps the active commit, issue, PR, or document in context across questions.
+- **Exact repository navigation:** Supports entity lookup, lists, previous/next records, and changed-file aggregation without unnecessary LLM calls.
+- **Historical PR review:** Enriches a new pull request with repository context and posts a concise review through GitHub Actions.
+- **Authenticated API and UI:** Provides a FastAPI backend and Streamlit interface with persistent chat sessions.
+
+## How it works
 
 ## Architecture
 
@@ -94,9 +118,27 @@ REPO_OWNER=owner_name
 REPO_NAME=repo_name
 HF_TOKEN=your_huggingface_token
 LLM_MODEL=Qwen/Qwen2.5-3B-Instruct
+COOKIES_PASSWORD=use-a-long-random-secret
 ```
 
-Do not commit `.env` or tokens.
+`COOKIES_PASSWORD` is required by the Streamlit UI to encrypt its persistent authentication cookie. Do not commit `.env`, passwords, or tokens.
+
+## Quick start
+
+From the project root, prepare the local project memory:
+
+```bash
+python -m src.pipeline
+```
+
+Then start the API and UI in separate terminals:
+
+```bash
+uvicorn src.API.main:app --reload
+streamlit run src/UI/app.py
+```
+
+Open the Streamlit URL shown in the terminal, create an account, and start asking questions about the configured GitHub repository.
 
 ## Full repository preparation
 
