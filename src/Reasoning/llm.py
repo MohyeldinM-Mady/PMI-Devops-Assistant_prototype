@@ -54,7 +54,7 @@ Rules:
 def generate_response(
     prompt: str,
     *,
-    max_tokens: int = 900,
+    max_tokens: int = 2500,
     temperature: float = 0.1,
 ) -> str:
 
