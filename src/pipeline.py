@@ -15,3 +15,7 @@ def prepare_current_repository():
     print("\n[4/4] Rebuilding vector database...")
     build_vector_db()
     print("\n=== Repository is ready for PMI ===")
+
+
+if __name__ == "__main__":
+    prepare_current_repository()
