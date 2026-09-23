@@ -116,10 +116,12 @@ pip install -r requirements.txt
 GITHUB_TOKEN=your_github_token_here
 REPO_OWNER=owner_name
 REPO_NAME=repo_name
-HF_TOKEN=your_huggingface_token
-LLM_MODEL=Qwen/Qwen2.5-3B-Instruct
+OPENROUTER_API_KEY=your_openrouter_api_key
+LLM_MODEL=openrouter/free
 COOKIES_PASSWORD=use-a-long-random-secret
 ```
+
+`OPENROUTER_API_KEY` is required for semantic answers and PR analysis. `LLM_MODEL` can be set to any model supported by OpenRouter. The embedding stage downloads `all-MiniLM-L6-v2` through `sentence-transformers`; it does not use `HF_TOKEN`.
 
 `COOKIES_PASSWORD` is required by the Streamlit UI to encrypt its persistent authentication cookie. Do not commit `.env`, passwords, or tokens.
 
@@ -139,6 +141,8 @@ streamlit run src/UI/app.py
 ```
 
 Open the Streamlit URL shown in the terminal, create an account, and start asking questions about the configured GitHub repository.
+
+The API must be running before the UI. The UI connects to `http://127.0.0.1:8000` by default; change `API_URL` in `src/UI/app.py` if the API runs elsewhere.
 
 ## Full repository preparation
 
@@ -218,7 +222,7 @@ python -m src.Retrieval.main
 
 ### Phase 6 — AI Reasoning
 
-The reasoning layer uses the Hugging Face Inference API only when semantic reasoning is needed. Project content is explicitly treated as untrusted data so repository text cannot act as instructions to the model.
+The reasoning layer uses the OpenRouter-compatible OpenAI API only when semantic reasoning is needed. Project content is explicitly treated as untrusted data so repository text cannot act as instructions to the model.
 
 Run the standalone reasoning demo with:
 
@@ -279,6 +283,14 @@ It runs when a PR is opened or synchronized and performs:
 6. Generate a security-aware AI review.
 7. Post the review as a PR comment.
 
+The workflow uses the repository-provided `GITHUB_TOKEN` plus an `OPENROUTER_API_KEY` repository secret. It analyzes up to five changed files and bounded patch/context text, and reports only confirmed bugs, regressions, security issues, or broken behavior. It does not run the local FastAPI or Streamlit applications.
+
+To run the DevOps reviewer locally, set `GITHUB_REPOSITORY` and `PR_NUMBER` in addition to `GITHUB_TOKEN` and `OPENROUTER_API_KEY`, then run:
+
+```bash
+python -m src.DevOps.main
+```
+
 ## Project structure
 
 ```text
@@ -324,7 +336,8 @@ src/
 │   └── main.py
 │
 ├── API/
-│   └── main.py
+│   ├── main.py
+│   └── Auth/
 │
 ├── UI/
 │   └── app.py
@@ -334,9 +347,6 @@ src/
     ├── retrieval.py
     ├── analyzer.py
     └── main.py
-
-tests/
-└── test_retrieval_contract.py
 ```
 
 ## Retrieval examples
@@ -377,12 +387,6 @@ What is the purpose of the project?
 
 The last type uses semantic retrieval and the reasoning model; the structured examples do not need a second reasoning pass.
 
-## Testing
+## Validation
 
-Run the retrieval-contract tests with:
-
-```bash
-python -m pytest -q
-```
-
-The tests cover canonical IDs, explicit references, active-reference follow-ups, relative navigation, and the dedicated `list_files` operation.
+This checkout does not currently contain a tracked automated test suite. For a local smoke check, run the preparation pipeline, start the API, and verify the interactive flow through the Streamlit UI. The API also exposes interactive documentation at `http://127.0.0.1:8000/docs` while it is running.
