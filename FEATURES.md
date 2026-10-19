@@ -1,5 +1,7 @@
 # PMI Features and System Integration
 
+For setup, validation, outcomes, and deployment limitations, start with [README.md](README.md). This is a local-development prototype, not a validated production service.
+
 ## 1. Project Overview
 
 PMI, or Project Memory Intelligence, is a GitHub-aware project-memory and DevOps assistant. It collects repository history and documentation, converts that information into searchable knowledge, and provides two main experiences:
@@ -17,7 +19,7 @@ PMI collects the following information from a configured GitHub repository:
 
 - Commits, including SHA, author, date, message, and changed files.
 - Issues, including number, title, author, date, state, labels, and content.
-- Pull requests, including number, title, author, date, stat, merge status, linked issues, and changed files.
+- Pull requests, including number, title, author, date, state, merge status, linked issues, and changed files.
 - Markdown documentation files, including filename, path, and full content.
 
 The collected data is stored locally under `data/` and can be rebuilt whenever the repository changes.
@@ -144,7 +146,10 @@ GET  /Auth/me
 POST /Auth/logout
 ```
 
-### Password and token security
+### Password and token implementation
+
+The JWT signing key is currently a hardcoded placeholder in `src/API/Auth/security.py`. `COOKIES_PASSWORD` only configures cookie encryption and does not fix JWT signing. Keep the app local until this is addressed and deployment security has been reviewed.
+
 
 - Passwords are stored as hashes, not plaintext values.
 - Password verification is performed by the backend.
@@ -162,7 +167,7 @@ COOKIES_PASSWORD=use-a-long-random-secret
 The `/chat` endpoint requires the authenticated user. Each request may include:
 
 - The current question.
-- Optional conversation history for display/context.
+- Optional conversation history (accepted by the API, but not used by the chat handler as model context).
 - An optional active reference identifying the current commit, issue, PR, or document.
 
 The API validates references against the indexed project memory before returning entity-specific answers.
@@ -255,7 +260,7 @@ The workflow requests:
 8. Read the changed files and patches from the current PR.
 9. Retrieve historical repository context related to those changes.
 10. Send the PR changes and historical context to the reasoning model.
-11. Generate a concise review containing only confirmed bugs, regressions, security issues, or broken behavior.
+11. Generate a concise review prompted to focus on confirmed bugs, regressions, security issues, or broken behavior; correctness still requires human review.
 12. Post the analysis as a comment on the pull request.
 
 ### Required workflow configuration
@@ -284,9 +289,9 @@ PR_NUMBER=${{ github.event.pull_request.number }}
 The DevOps reviewer limits the amount of data sent to the model:
 
 - Up to five changed files are analyzed.
-- Each file patch is truncated to a configured maximum size.
-- Total current patch text is bounded.
-- Historical context is bounded before it is placed in the prompt.
+- Each file patch is truncated to 200 characters.
+- Total current patch text is limited to 1,000 characters.
+- Historical context is limited to 300 characters before it is placed in the prompt.
 
 The reviewer is instructed to avoid style-only comments and speculation. If no confirmed issue is found, it returns:
 
@@ -388,6 +393,13 @@ Secrets must not be committed to Git or placed in public documentation. GitHub A
 
 ## 10. Current Limitations and Operational Notes
 
+- Exact/relative retrieval updates the returned active reference; a fixed original anchor is not guaranteed. PR prefix handling and clearing persisted references require further validation.
+- The UI accesses SQLite directly, so the API and UI should share the same checkout and local database.
+- All users share one configured repository index. Refreshing it rebuilds that snapshot.
+- Filename-based documentation IDs can collide across directories.
+- Generated analysis is advisory. Semantic answers and PR review send selected context to OpenRouter and its model provider.
+- Fork-origin PRs normally cannot access repository secrets or a write-enabled workflow token.
+
 - The project depends on valid GitHub credentials and repository access.
 - A `404` from GitHub can mean that the owner/name is wrong or that the token cannot access a private repository.
 - A `401` means the GitHub token is invalid, expired, or revoked.
@@ -423,7 +435,7 @@ Authenticated chatbot       GitHub Actions PR review
 Exact or semantic query      PR diff plus historical context
       |                          |
       v                          v
-Grounded answer              Confirmed-issue analysis
+Grounded answer              AI-generated analysis
       |                          |
       +------------+-------------+
                    v
